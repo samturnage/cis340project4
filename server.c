@@ -3,7 +3,7 @@
 #include <stdio.h>
 int main( int argc, const char* argv[] )
 {
-    char floppy[] = argv[1];
+    	  const char* floppy = argv[1];
 	  printf( "\nFloppy %s opened...\n",floppy);
 	  //fmount
 	  

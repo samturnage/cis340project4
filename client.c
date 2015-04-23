@@ -11,7 +11,7 @@ void fumount(char hostname[])
 
 void help()
 {
-      printf(\nClient Floppy Image Reader\n);
+      printf("\nClient Floppy Image Reader\n");
       printf("==================================\n ");
       printf("This program pulls info from a floppy mounted on a server and interprets it\n ");
       printf("==================================\n ");
