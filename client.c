@@ -1,12 +1,20 @@
 #include <stdio.h>
 
 
-void fmount(char hostname[])
+int fmount(char *hostname[])
 {
+int fd;
+mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
+fd=open(hostname,O_RDONLY,mode);
+perror("error open  ");
+return fd;
+	
 }
 
-void fumount(char hostname[])
+void fumount(int fd)    //in main the fd closed is socket_fd
 {
+    close(fd);
+    printf("file unmounted\n");	
 }
 
 void help()
@@ -24,25 +32,64 @@ void help()
       printf("structure - pulls structural info from server and displays it \n ");
       printf("quit - Quit out of the floppy shell \n\n");
 }
-
-void structure()
+/////////////////////////////////////////////////////////////
+void structure(int fd)   //if we can pass in the fd it will be so much easier
 {
-}
+unsigned char buff[512];
 
+lseek(fd,0,SEEK_SET);
+int n =read(fd,buff,512);
+perror("error read  ");
+
+printf("flop structure\n");
+printf("\t\tnumber of Fat:\t\t\t\t%d\n",buff[16]);
+printf("\t\tnumber of sectors used by FAT:\t\t%d\n",buff[22]);
+printf("\t\tnumber of sectors per cluster:\t\t%d\n",buff[13]);
+printf("\t\tnumber of ROOT Enteries:\t\t%d\n",buff[17]|buff[18]<<8);
+printf("\t\tnumber of bytes per sector:\t\t%d\n",buff[11]|buff[12]<<8);
+
+printf("\t\t---Sector #---\t\t---Sector Types---\n");
+//int x,y,z;
+
+
+}
+/////////////////////////////////////////////////////////////
 void traverse(short flag)
 {
 }
-
-void showsector(int sectorNum)
+/////////////////////////////////////////////////////////////
+void showsector(int sectorNum, int fd)  //same here to pass in the fd handler will be easier!
 {
+int counter=0,i,j,z;
+unsigned int title=0x00;
+unsigned int col=0x00;
+
+lseek(fd,sectorNum*512,SEEK_SET);
+read(fd,buff,512);
+perror("error read");
+
+printf("flop:showsector %d\n",n);
+for(z=0; z<16; z++){   //format column
+printf("\t%x", col);
+col=col+0x01;}
+printf("\n");
+for(i=0; i<32;i++){   //format row
+printf("%x\t", title);
+title=title+0x10;
+for(j=0; j<16; j++){
+	printf("%x\t", buff[counter]); 
+	counter++;
+}
+	printf("\n");
+      }
 
 }
-
+//////////////////////////////////////////////////////////////
 int main( int argc, const char* argv[] )
 {
 	  printf( "\n--Client Started--\n\n" );
-	  
-	  while(0)
+	  //client has to request one or more sectors from server---not sure how to accomplish this
+	  while(1)
 	  {
 	      //get input
 	      /*
