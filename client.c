@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-
+//Attach to the server
 int fmount(char *hostname[])
 {
 int fd;
@@ -10,7 +10,7 @@ perror("error open  ");
 return fd;
 	
 }
-
+//detach from the server
 void fumount(int fd)    //in main the fd closed is socket_fd
 {
     close(fd);
@@ -37,8 +37,11 @@ void structure(int fd)   //if we can pass in the fd it will be so much easier
 {
 unsigned char buff[512];
 
-lseek(fd,0,SEEK_SET);
-int n =read(fd,buff,512);
+//lseek(fd,0,SEEK_SET);		this will be in the server
+//int n =read(fd,buff,512);
+
+//buff = getfromserver
+
 perror("error read  ");
 
 printf("flop structure\n");
@@ -85,12 +88,26 @@ for(j=0; j<16; j++){
 
 }
 //////////////////////////////////////////////////////////////
+void parse(char* input, char* arguments[]){
+	arguments[0] = strtok(input, "\n ");
+	i = 0;
+	do{
+		i++;
+		arguments[i] = strtok(NULL, "\n ");
+	}while(arguments[i] != NULL);  
+}
+//////////////////////////////////////////////////////////
 int main( int argc, const char* argv[] )
 {
 	  printf( "\n--Client Started--\n\n" );
 	  //client has to request one or more sectors from server---not sure how to accomplish this
 	  while(1)
 	  {
+	  	printf("\nfloppy: ");
+		chrptr = fgets(input, 100, stdin);
+		if(chrptr == NULL){
+			printf("\nError: could not read input\n");
+		}
 	      //get input
 	      /*
 	        help
