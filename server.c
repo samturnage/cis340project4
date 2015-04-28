@@ -4,16 +4,18 @@
 int main( int argc, const char* argv[] )
 {
     	 // const char* floppy = argv[1];
-	 //printf( "\nFloppy %s opened...\n",floppy);
-	
-          //fmount
-    
-    
-    int cont, socket_fd, fd, fsize, ca;
-    int buffsize = 1024;
-    char *hostname[1024];
-    char *buffer = malloc(sizeof(buffsize)); //buffer to read imagefile.img into
+	 //printf( "\nFloppy %s opened...\n",floppy)
+    int cont, socket_fd, fd, fsize, recvlen;
+    char *hostname[];
     struct sockaddr_in s_in, from;
+    
+    struct {
+     char cmd;
+     char sequence;
+     short argument;
+     unsigned char buffer[512];
+        
+    } serverMsg;
     
     
     socket_fd = socket(AF_INET, SOCK_DGRAM, 0);  //create socket
@@ -38,14 +40,14 @@ int main( int argc, const char* argv[] )
     
     for(;;){
         fsize = sizeof(from);
-        ca = recvfrom(socket_fd, hostname, 1024, 0, (struct sockaddr *)&from,&fsize);  //receive data from UDP datagram
-        if(ca < 0){
+        recvlen = recvfrom(socket_fd, &serverMsg, sizeof(serverMsg), 0, (struct sockaddr *)&from,&fsize);  //receive data from UDP datagram
+        if(recvlen < 0){
             perror("recvfrom fail");
         }
        
         while((cont = read(fd, buffer, sizeof(buffer)))>0) {  // while loop reading from the sectors possibly need to manipulate this to read from individual sectors
             sleep(1);
-            sendto(socket_fd, hostname, ca, 0, (struct sockaddr *)&from,&fsize);  //trying to send back to client 
+            sendto(socket_fd, &serverMsg, sizeof(serverMsg), 0, (struct sockaddr *)&from,&fsize);  //trying to send back to client 
             
         }
         /*
