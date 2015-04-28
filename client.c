@@ -10,14 +10,17 @@
 #include	<netdb.h>
 
 //Attach to the server
-int fmount(char *hostname[])
+//returns 1 if connection succeeded, 0 if failed
+short fmount(char *hostname[])
 {
+/*
 int fd;
 mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
 fd=open(hostname,O_RDONLY,mode);
 perror("error open  ");
 return fd;
-	
+*/
+	return 0;
 }
 //detach from the server
 void fumount(int fd)    //in main the fd closed is socket_fd
@@ -114,7 +117,7 @@ int main( int argc, const char* argv[] )
     struct sockaddr_in	dest;
     struct hostent *gethostbyname(), *hostptr;
 
-  struct {
+    struct {
         
      char cmd;
      char sequence;
@@ -149,6 +152,7 @@ int main( int argc, const char* argv[] )
 	  char input[100];
 	  char *arguments[5];
 	  char* chrptr; 
+	  short isconnected = 0;
 	  
 	  
 	  printf( "\n--Client Started--\n\n" );
@@ -160,42 +164,39 @@ int main( int argc, const char* argv[] )
 		if(chrptr == NULL){
 			printf("\nError: could not read input\n");
 		}
-		parse(input, arguments);
-		//the first argument[0] is the command/////////
-		if(strcmp(arguments[0], "quit") == 0){
-			exit(EXIT_SUCCESS);
+		else
+		{
+			parse(input, arguments);
+			//the first argument[0] is the command/////////
+			if(strcmp(arguments[0], "quit") == 0){
+				exit(EXIT_SUCCESS);
+			}
+			else if(strcmp(arguments[0], "help") == 0){
+				help();
+			}
+			else if(strcmp(arguments[0], "fmount") == 0){
+				//isconnected = fmount(argument[1]);
+			}
+			else if(strcmp(arguments[0], "fumount") == 0){
+				//fumount(argument[1]);
+			}
+			else if(strcmp(arguments[0], "structure") == 0){
+				//structure();
+			}
+			else if(strcmp(arguments[0], "traverse") == 0){
+				
+				//short flag = 0
+				//if(arguments[1] != null && strcmp(arguments[1], "-l") flag = 1;
+				//traverse(flag);
+			}
+			else if(strcmp(arguments[0], "showsector") == 0){
+				//showsector();
+			}
+			else
+			{
+				printf("\nUnrecognized command. Type "help" for a list of commands.\n);
+			}	
 		}
-		else if(strcmp(arguments[0], "help") == 0){
-			help();
-		}
-		else if(strcmp(arguments[0], "fmount") == 0){
-			//fmount(argument[1]);
-		}
-		else if(strcmp(arguments[0], "fumount") == 0){
-			//fumount(argument[1]);
-		}
-		else if(strcmp(arguments[0], "structure") == 0){
-			//structure();
-		}
-		else if(strcmp(arguments[0], "traverse") == 0){
-			//int flag = 
-			//traverse(flag);
-		}
-		else if(strcmp(arguments[0], "showsector") == 0){
-			help();
-		}
-		
-	      //get input
-	      /*
-	        help
-	        fmount [hostname]
-	        fumount [hostname]
-	        structure
-	        traverse -l
-	        showsector
-	        quit
-	      */
-	  
 	  }
 	  
 	  return 0;
