@@ -31,22 +31,31 @@ int main( int argc, const char* argv[] )
         perror("bind failed");
         exit(1);
     }
+    
+    if((fd = open(hostname, O_RDONLY)) < 0){ //open the imagefile (fmount)
+            perror("file open failed");
+        }
+    
     for(;;){
         fsize = sizeof(from);
         ca = recvfrom(socket_fd, hostname, 1024, 0, (struct sockaddr *)&from,&fsize);  //receive data from UDP datagram
         if(ca < 0){
             perror("recvfrom fail");
         }
-        
-        if((fd = open(hostname, O_RDONLY)) < 0){ //open the imagefile (fmount)
-            perror("file open failed");
-        }
-        
+       
         while((cont = read(fd, buffer, sizeof(buffer)))>0) {  // while loop reading from the sectors possibly need to manipulate this to read from individual sectors
             sleep(1);
             sendto(socket_fd, hostname, ca, 0, (struct sockaddr *)&from,&fsize);  //trying to send back to client 
             
         }
+        /*
+        loop waiting for a message
+        	get some message
+        	if the message is traverse etc
+        		read from open floppy
+        		send back to client
+        
+        */	
         
     }
         //fumount
