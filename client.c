@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include        <stdio.h>
 #include	<signal.h>
 #include	<errno.h>
 #include	<strings.h>
@@ -108,6 +108,44 @@ void parse(char* input, char* arguments[]){
 //////////////////////////////////////////////////////////
 int main( int argc, const char* argv[] )
 {
+	
+    int	socket_fd, recvlen;
+    long getpid();
+    struct sockaddr_in	dest;
+    struct hostent *gethostbyname(), *hostptr;
+
+  struct {
+        
+     char cmd;
+     char sequence;
+     short argument;
+     unsigned char buffer[512];
+        
+    } buf;
+    
+    socket_fd = socket (AF_INET, SOCK_DGRAM, 0);
+    if (socket_fd == -1) {
+	perror ("send_udp:socket");
+	exit(1);
+    }
+     
+    bzero((char *) &dest, sizeof(dest)); /* They say you must do this */
+    if ((hostptr = gethostbyname(argv[1])) == NULL){
+	fprintf(stderr, "send_udp: invalid host name, %s\n",argv[1]);
+	exit(1);
+    }
+    
+    dest.sin_family = AF_INET;
+    bcopy(hostptr->h_addr, (char *)&dest.sin_addr,hostptr->h_length);
+    dest.sin_port = htons((u_short)0x5000);
+	
+	recvlen = sendto(socket_fd,&buf,sizeof(buf),0,(struct sockaddr *)&dest,
+                  sizeof(dest));
+    if (recvlen < 0) {
+	perror("send_udp:sendto");
+        exit(1);
+    }
+    
 	  char input[100];
 	  char *arguments[5];
 	  char* chrptr; 
