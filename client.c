@@ -99,6 +99,11 @@ void parse(char* input, char* arguments[]){
 //////////////////////////////////////////////////////////
 int main( int argc, const char* argv[] )
 {
+	  char input[100];
+	  char *arguments[5];
+	  char* chrptr; 
+	  
+	  
 	  printf( "\n--Client Started--\n\n" );
 	  //client has to request one or more sectors from server---not sure how to accomplish this
 	  while(1)
@@ -108,6 +113,31 @@ int main( int argc, const char* argv[] )
 		if(chrptr == NULL){
 			printf("\nError: could not read input\n");
 		}
+		parse(input, arguments);
+		//the first argument[0] is the command/////////
+		if(strcmp(arguments[0], "quit") == 0){
+			exit(EXIT_SUCCESS);
+		}
+		else if(strcmp(arguments[0], "help") == 0){
+			help();
+		}
+		else if(strcmp(arguments[0], "fmount") == 0){
+			//fmount(argument[1]);
+		}
+		else if(strcmp(arguments[0], "fumount") == 0){
+			//fumount(argument[1]);
+		}
+		else if(strcmp(arguments[0], "structure") == 0){
+			//structure();
+		}
+		else if(strcmp(arguments[0], "traverse") == 0){
+			//int flag = 
+			//traverse(flag);
+		}
+		else if(strcmp(arguments[0], "showsector") == 0){
+			help();
+		}
+		
 	      //get input
 	      /*
 	        help
