@@ -1,0 +1,9 @@
+create a data structure that will allow server and client to communicate.
+	Struct {
+			char cmd; //command that is being used
+			chr sequence // for memory management
+			short argument; // argument with command, ex: sector 10, sector num can be 							very large
+			
+			char array data[512]; //array to hold data, can hold 1 sector etc
+			
+	}
