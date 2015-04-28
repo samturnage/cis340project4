@@ -1,4 +1,13 @@
 #include <stdio.h>
+#include	<signal.h>
+#include	<errno.h>
+#include	<strings.h>
+#include 	<stdlib.h>
+#include	<stdio.h>
+#include	<sys/types.h>
+#include	<sys/socket.h>
+#include	<netinet/in.h>
+#include	<netdb.h>
 
 //Attach to the server
 int fmount(char *hostname[])
