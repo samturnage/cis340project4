@@ -3,11 +3,13 @@
 #include<stdlib.h> //exit(0);
 #include<arpa/inet.h>
 #include<sys/socket.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
 
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to listen for incoming data
-
-/////this works compiles and runs and communicates with server...just need to send the data chunks to client
 
 void die(char *s)
 {
@@ -19,8 +21,9 @@ int main(void)
 {
     struct sockaddr_in si_me, si_other;
     
-    int s, i, slen = sizeof(si_other) , recv_len;
+    int s, i, n, fd, slen = sizeof(si_other) , recv_len;
     char buf[BUFLEN];
+    char *hostname;
     
     //create a UDP socket
     if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -40,6 +43,9 @@ int main(void)
     {
         die("bind");
     }
+    //if((fd = open("imagefile.img", O_RDONLY))<0){
+        //perror("no such file");
+    //}
     
     //keep listening for data
     while(1)
@@ -52,8 +58,19 @@ int main(void)
         {
             die("recvfrom()");
         }
-        
-        
+        if(strcmp(buf, "fmount")==0){
+            
+            fd = open(hostname, O_RDONLY);
+        }
+        if(strcmp(buf, "structure")==0){
+            lseek(fd, 0, SEEK_SET );
+            while((n = read(fd, buf, BUFLEN)) > 0){
+                sendto(s, buf, recv_len, 0, (struct sockaddr*)&si_other, slen);
+                die("sendto()");
+            }
+        }
+
+    
         //print details of the client/peer and the data received
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
         printf("Data: %s\n" , buf);
@@ -68,14 +85,3 @@ int main(void)
     close(s);
     return 0;
 }
-        /*
-        loop waiting for a message
-        	get some message
-        	if the message is traverse etc
-        		read from open floppy
-        		send back to client
-        
-        */	
-        
-
-
