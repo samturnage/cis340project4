@@ -1,203 +1,210 @@
-#include        <stdio.h>
-#include	<signal.h>
-#include	<errno.h>
-#include	<strings.h>
-#include 	<stdlib.h>
-#include	<stdio.h>
-#include	<sys/types.h>
-#include	<sys/socket.h>
-#include	<netinet/in.h>
-#include	<netdb.h>
+#include<stdio.h> //printf
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<string.h> 
+#include<stdlib.h> //exit(0);
+#include<arpa/inet.h>
+#include<sys/socket.h>
 
-//Attach to the server
-//returns 1 if connection succeeded, 0 if failed
-short fmount(char *hostname[])
+#define SERVER "127.0.0.1"
+#define BUFLEN 512  //Max length of buffer
+#define PORT 5000   //The port on which to send data
+
+
+int fmount(char *hostname)
 {
-/*
-int fd;
-mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
-fd=open(hostname,O_RDONLY,mode);
-perror("error open  ");
-return fd;
-*/
-	return 0;
+    int s;
+    mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
+    s=open(hostname,O_RDONLY,mode);
+    perror("error open  ");
+    return s;
+    
 }
 //detach from the server
-void fumount(int fd)    //in main the fd closed is socket_fd
+void fumount(int s)    //in main the fd closed is socket_fd
 {
-    close(fd);
-    printf("file unmounted\n");	
+    close(s);
+    printf("file unmounted\n");
 }
 
 void help()
 {
-      printf("\nClient Floppy Image Reader\n");
-      printf("==================================\n ");
-      printf("This program pulls info from a floppy mounted on a server and interprets it\n ");
-      printf("==================================\n ");
-      printf("\nCommands: \n\n ");
-      printf("help - Displays useable commands \n ");
-      printf("fmount [hostname] - Mounts the desired server \n ");
-      printf("fumount [hostname] - Unmounts the desired server \n ");
-      printf("showsector [sectornum] - Pulls desired sector info from server and displays it \n ");
-      printf("traverse [-l] - Display the root directory contents (with the option to show more info) \n ");
-      printf("structure - pulls structural info from server and displays it \n ");
-      printf("quit - Quit out of the floppy shell \n\n");
+    printf("\nClient Floppy Image Reader\n");
+    printf("==================================\n ");
+    printf("This program pulls info from a floppy mounted on a server and interprets it\n ");
+    printf("==================================\n ");
+    printf("\nCommands: \n\n ");
+    printf("help - Displays useable commands \n ");
+    printf("fmount [hostname] - Mounts the desired server \n ");
+    printf("fumount [hostname] - Unmounts the desired server \n ");
+    printf("showsector [sectornum] - Pulls desired sector info from server and displays it \n ");
+    printf("traverse [-l] - Display the root directory contents (with the option to show more info) \n ");
+    printf("structure - pulls structural info from server and displays it \n ");
+    printf("quit - Quit out of the floppy shell \n\n");
 }
+
+
 /////////////////////////////////////////////////////////////
-void structure(int fd)   //if we can pass in the fd it will be so much easier
+void structure(int s)   //if we can pass in the fd it will be so much easier
 {
-unsigned char buff[512];
-
-//lseek(fd,0,SEEK_SET);		this will be in the server
-//int n =read(fd,buff,512);
-
-//buff = getfromserver
-
-perror("error read  ");
-
-printf("flop structure\n");
-printf("\t\tnumber of Fat:\t\t\t\t%d\n",buff[16]);
-printf("\t\tnumber of sectors used by FAT:\t\t%d\n",buff[22]);
-printf("\t\tnumber of sectors per cluster:\t\t%d\n",buff[13]);
-printf("\t\tnumber of ROOT Enteries:\t\t%d\n",buff[17]|buff[18]<<8);
-printf("\t\tnumber of bytes per sector:\t\t%d\n",buff[11]|buff[12]<<8);
-
-printf("\t\t---Sector #---\t\t---Sector Types---\n");
-//int x,y,z;
-
-
+    unsigned char buff[512];
+    
+    //lseek(fd,0,SEEK_SET);		this will be in the server
+    //int n =read(fd,buff,512);
+    
+    //buff = getfromserver
+    
+    perror("error read  ");
+    
+    printf("flop structure\n");
+    printf("\t\tnumber of Fat:\t\t\t\t%d\n",buff[16]);
+    printf("\t\tnumber of sectors used by FAT:\t\t%d\n",buff[22]);
+    printf("\t\tnumber of sectors per cluster:\t\t%d\n",buff[13]);
+    printf("\t\tnumber of ROOT Enteries:\t\t%d\n",buff[17]|buff[18]<<8);
+    printf("\t\tnumber of bytes per sector:\t\t%d\n",buff[11]|buff[12]<<8);
+    
+    printf("\t\t---Sector #---\t\t---Sector Types---\n");
+    //int x,y,z;
+    
+    
 }
 /////////////////////////////////////////////////////////////
 void traverse(short flag)
 {
 }
 /////////////////////////////////////////////////////////////
-void showsector(int sectorNum, int fd)  //same here to pass in the fd handler will be easier!
+void showsector(int sectorNum, int s)  //same here to pass in the fd handler will be easier!
 {
-int counter=0,i,j,z;
-unsigned int title=0x00;
-unsigned int col=0x00;
-
-lseek(fd,sectorNum*512,SEEK_SET);
-read(fd,buff,512);
-perror("error read");
-
-printf("flop:showsector %d\n",n);
-for(z=0; z<16; z++){   //format column
-printf("\t%x", col);
-col=col+0x01;}
-printf("\n");
-for(i=0; i<32;i++){   //format row
-printf("%x\t", title);
-title=title+0x10;
-for(j=0; j<16; j++){
-	printf("%x\t", buff[counter]); 
-	counter++;
-}
-	printf("\n");
-      }
-
-}
-//////////////////////////////////////////////////////////////
-void parse(char* input, char* arguments[]){
-	arguments[0] = strtok(input, "\n ");
-	i = 0;
-	do{
-		i++;
-		arguments[i] = strtok(NULL, "\n ");
-	}while(arguments[i] != NULL);  
-}
-//////////////////////////////////////////////////////////
-int main( int argc, const char* argv[] )
-{
-	
-    int	socket_fd, recvlen;
-    long getpid();
-    struct sockaddr_in	dest;
-    struct hostent *gethostbyname(), *hostptr;
-
-    struct {
-        
-     char cmd;
-     char sequence;
-     short argument;
-     unsigned char buffer[512];
-        
-    } buf;
+    unsigned char buff[512];
+    int counter=0,i,j,z;
+    unsigned int title=0x00;
+    unsigned int col=0x00;
     
-    socket_fd = socket (AF_INET, SOCK_DGRAM, 0);
-    if (socket_fd == -1) {
-	perror ("send_udp:socket");
-	exit(1);
-    }
-     
-    bzero((char *) &dest, sizeof(dest)); /* They say you must do this */
-    if ((hostptr = gethostbyname(argv[1])) == NULL){
-	fprintf(stderr, "send_udp: invalid host name, %s\n",argv[1]);
-	exit(1);
+    //lseek(fd,sectorNum*512,SEEK_SET);
+    //read(fd,buff,512);
+    perror("error read");
+    
+    printf("flop:showsector %d\n",sectorNum);
+    for(z=0; z<16; z++){   //format column
+        printf("\t%x", col);
+        col=col+0x01;}
+    printf("\n");
+    for(i=0; i<32;i++){   //format row
+        printf("%x\t", title);
+        title=title+0x10;
+        for(j=0; j<16; j++){
+            printf("%x\t", buff[counter]);
+            counter++;
+        }
+        printf("\n");
     }
     
-    dest.sin_family = AF_INET;
-    bcopy(hostptr->h_addr, (char *)&dest.sin_addr,hostptr->h_length);
-    dest.sin_port = htons((u_short)0x5000);
-	
-	recvlen = sendto(socket_fd,&buf,sizeof(buf),0,(struct sockaddr *)&dest,
-                  sizeof(dest));
-    if (recvlen < 0) {
-	perror("send_udp:sendto");
+}
+
+
+void die(char *s)
+{
+    perror(s);
+    exit(1);
+}
+
+int main(void)
+{
+    struct sockaddr_in si_other;
+    int s, i, slen=sizeof(si_other);
+    char buf[BUFLEN];
+    char message[BUFLEN];
+    
+    if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    {
+        die("socket");
+    }
+    
+    bzero((char *) &si_other, sizeof(si_other));
+    si_other.sin_family = AF_INET;
+    si_other.sin_port = htons(PORT);
+    
+    if (inet_aton(SERVER , &si_other.sin_addr) == 0)
+    {
+        fprintf(stderr, "inet_aton() failed\n");
         exit(1);
     }
     
-	  char input[100];
-	  char *arguments[5];
-	  char* chrptr; 
-	  short isconnected = 0;
-	  
-	  
-	  printf( "\n--Client Started--\n\n" );
-	  //client has to request one or more sectors from server---not sure how to accomplish this
-	  while(1)
-	  {
-	  	printf("\nfloppy: ");
-		chrptr = fgets(input, 100, stdin);
-		if(chrptr == NULL){
-			printf("\nError: could not read input\n");
-		}
-		else
-		{
-			parse(input, arguments);
-			//the first argument[0] is the command/////////
-			if(strcmp(arguments[0], "quit") == 0){
-				exit(EXIT_SUCCESS);
-			}
-			else if(strcmp(arguments[0], "help") == 0){
-				help();
-			}
-			else if(strcmp(arguments[0], "fmount") == 0){
-				//isconnected = fmount(argument[1]);
-			}
-			else if(strcmp(arguments[0], "fumount") == 0){
-				//fumount(argument[1]);
-			}
-			else if(strcmp(arguments[0], "structure") == 0){
-				//structure();
-			}
-			else if(strcmp(arguments[0], "traverse") == 0){
-				
-				//short flag = 0
-				//if(arguments[1] != null && strcmp(arguments[1], "-l") flag = 1;
-				//traverse(flag);
-			}
-			else if(strcmp(arguments[0], "showsector") == 0){
-				//showsector();
-			}
-			else
-			{
-				printf("\nUnrecognized command. Type "help" for a list of commands.\n);
-			}	
-		}
-	  }
-	  
-	  return 0;
+    int m=0, j=1;
+    char *p;
+    char *array[10];
+    char *hostname;
+    
+    while(1)
+    {
+        
+        printf("Enter message : \n");
+        printf("client started------\n");
+        
+        printf("~flop:");
+        fgets(message, sizeof(message), stdin);
+        
+        //send the message
+        if (sendto(s, message, strlen(message) , 0 , (struct sockaddr *) &si_other, slen)==-1)
+        {
+            die("sendto()");
+        }
+        p=strtok(message, "\n");
+        while(p!=NULL){
+            array[m] = (char*)malloc(sizeof(p));
+            strcpy(array[m], p);
+            p = strtok(NULL, "\n");
+            i++;
+        }
+        if(strcmp(array[0], "help")==0){
+            help();
+            
+        }else if (strcmp(array[0], "fmount")==0){
+            if(array[1] == NULL){
+                printf("enter filename");
+            }
+            else {
+                
+            s = fmount(array[1]); //s is socket fd on server side
+            }
+        }
+        else if(strcmp(array[0], "fumount")==0 && array[1]==NULL){
+            fumount(s);
+            }
+        else if(strcmp(array[0], "showsector")==0){
+            
+            if(array[1]==NULL)
+            {
+                printf("enter a number\n");
+            }else
+            {
+                int j = atoi(array[1]);
+                showsector(j, s);
+            }
+            
+        }else if(strcmp(array[0], "structure")==0)
+          {
+            printf("%d\n", s);
+            structure(s);
+           }
+        else{
+            printf("invalid");
+        }
+        
+        //receive a reply and print it
+        //clear the buffer by filling null, it might have previously received data
+        memset(buf,'\0', BUFLEN);
+        //try to receive some data, this is a blocking call
+        if (recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen) == -1)
+        {
+            die("recvfrom()");
+        }
+        
+        puts(buf);
+    }
+    
+    close(s);
+    return 0;
 }
