@@ -1,67 +1,73 @@
+#include<stdio.h> //printf
+#include<string.h> //memset
+#include<stdlib.h> //exit(0);
+#include<arpa/inet.h>
+#include<sys/socket.h>
 
+#define BUFLEN 512  //Max length of buffer
+#define PORT 5000   //The port on which to listen for incoming data
 
-#include        <stdio.h>
-#include	<signal.h>
-#include	<errno.h>
-#include	<strings.h>
-#include 	<stdlib.h>
-#include	<stdio.h>
-#include	<sys/types.h>
-#include	<sys/socket.h>
-#include	<netinet/in.h>
-#include	<netdb.h>
-#include        <arpa/inet.h>
+/////this works compiles and runs and communicates with server...just need to send the data chunks to client
 
-
-int main( int argc, const char* argv[] )
+void die(char *s)
 {
-    	 // const char* floppy = argv[1];
-	 //printf( "\nFloppy %s opened...\n",floppy)
-    int cont, socket_fd, fd, fsize, recvlen;
-    char *hostname[];
-    struct sockaddr_in s_in, from;
+    perror(s);
+    exit(1);
+}
+
+int main(void)
+{
+    struct sockaddr_in si_me, si_other;
     
-    struct {
-     char cmd;
-     char sequence;
-     short argument;
-     unsigned char buffer[512];
+    int s, i, slen = sizeof(si_other) , recv_len;
+    char buf[BUFLEN];
+    
+    //create a UDP socket
+    if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    {
+        die("socket");
+    }
+    
+    // zero out the structure
+    bzero((char *) &si_me,sizeof(si_me));
+    
+    si_me.sin_family = AF_INET;
+    si_me.sin_port = htons(PORT);
+    si_me.sin_addr.s_addr = htonl(INADDR_ANY);
+    
+    //bind socket to port
+    if( bind(s , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
+    {
+        die("bind");
+    }
+    
+    //keep listening for data
+    while(1)
+    {
+        printf("Waiting for data...");
+        fflush(stdout);
         
-    } serverMsg;
-    
-    
-    socket_fd = socket(AF_INET, SOCK_DGRAM, 0);  //create socket
-    if(socket_fd < 0){
-        perror("socket not created"); //socket error
-        exit(1);
+        //try to receive some data, this is a blocking call
+        if ((recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen)) == -1)
+        {
+            die("recvfrom()");
+        }
+        
+        
+        //print details of the client/peer and the data received
+        printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
+        printf("Data: %s\n" , buf);
+        
+        //now reply the client with the same data
+        if (sendto(s, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
+        {
+            die("sendto()");
+        }
     }
-    bzero((char *)&s_in, sizeof(s_in));
     
-    s_in.sin_family = (short)AF_INET;            //define the family, address and port ...I think we can use 5000? it was between 5000- 6000 something
-    s_in.sin_addr.s_addr = hton(INADDR_ANY);
-    s_in.sin_port = htons ((u_short)0x5000);
-    
-    if(bind(socket_fd, (struct sockaddr *)&s_in, sizeof(s_in)) < 0){  //bind socket
-        perror("bind failed");
-        exit(1);
-    }
-    
-    if((fd = open(hostname, O_RDONLY)) < 0){ //open the imagefile (fmount)
-            perror("file open failed");
-        }
-    
-    for(;;){
-        fsize = sizeof(from);
-        recvlen = recvfrom(socket_fd, &serverMsg, sizeof(serverMsg), 0, (struct sockaddr *)&from,&fsize);  //receive data from UDP datagram
-        if(recvlen < 0){
-            perror("recvfrom fail");
-        }
-       
-        while((cont = read(fd, buffer, sizeof(buffer)))>0) {  // while loop reading from the sectors possibly need to manipulate this to read from individual sectors
-            sleep(1);
-            sendto(socket_fd, &serverMsg, sizeof(serverMsg), 0, (struct sockaddr *)&from,&fsize);  //trying to send back to client 
-            
-        }
+    close(s);
+    return 0;
+}
         /*
         loop waiting for a message
         	get some message
@@ -71,10 +77,5 @@ int main( int argc, const char* argv[] )
         
         */	
         
-    }
-        //fumount
-        printf("request complete");
-        close(socket_fd);
-	  //fumount
-	  return 0;
-}
+
+
