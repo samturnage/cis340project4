@@ -24,7 +24,7 @@ int fmount(char *hostname)
     
 }
 //detach from the server
-void fumount(int fd)    //in main the fd closed is socket_fd
+void fumount(int fd)    
 {
     close(fd);
     printf("file unmounted\n");
