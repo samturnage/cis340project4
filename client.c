@@ -3,29 +3,30 @@
 #include<sys/types.h>
 #include<sys/stat.h>
 #include<fcntl.h>
-#include<string.h> 
+#include<string.h> //memset
 #include<stdlib.h> //exit(0);
 #include<arpa/inet.h>
 #include<sys/socket.h>
 
-#define SERVER "127.0.0.1"
+#define SERVER "127.0.0.1"  
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to send data
 
 
 int fmount(char *hostname)
 {
-    int s;
+    int fd;
     mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
-    s=open(hostname,O_RDONLY,mode);
+    fd=open(hostname,O_RDONLY,mode);
     perror("error open  ");
-    return s;
+    return fd;
+    //return 0;
     
 }
 //detach from the server
-void fumount(int s)    //in main the fd closed is socket_fd
+void fumount(int fd)    //in main the fd closed is socket_fd
 {
-    close(s);
+    close(fd);
     printf("file unmounted\n");
 }
 
@@ -47,16 +48,18 @@ void help()
 
 
 /////////////////////////////////////////////////////////////
-void structure(int s)   //if we can pass in the fd it will be so much easier
+void structure(int fd)   //if we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
+    
     
     //lseek(fd,0,SEEK_SET);		this will be in the server
     //int n =read(fd,buff,512);
     
     //buff = getfromserver
+    //buff = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
     
-    perror("error read  ");
+       //perror("error read  ");
     
     printf("flop structure\n");
     printf("\t\tnumber of Fat:\t\t\t\t%d\n",buff[16]);
@@ -75,7 +78,7 @@ void traverse(short flag)
 {
 }
 /////////////////////////////////////////////////////////////
-void showsector(int sectorNum, int s)  //same here to pass in the fd handler will be easier!
+void showsector(int sectorNum, int fd)  //same here to pass in the fd handler will be easier!
 {
     unsigned char buff[512];
     int counter=0,i,j,z;
@@ -112,7 +115,7 @@ void die(char *s)
 
 int main(void)
 {
-    struct sockaddr_in si_other;
+    struct sockaddr_in si_other;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
     int s, i, slen=sizeof(si_other);
     char buf[BUFLEN];
     char message[BUFLEN];
@@ -133,9 +136,11 @@ int main(void)
     }
     
     int m=0, j=1;
+    int fd;
     char *p;
     char *array[10];
     char *hostname;
+    //char* input[100];
     
     while(1)
     {
@@ -144,7 +149,8 @@ int main(void)
         printf("client started------\n");
         
         printf("~flop:");
-        fgets(message, sizeof(message), stdin);
+        //fgets(input, sizeof(input), stdin);
+        fgets(message, sizeof(message), stdin); //get message size ie data sectors from server
         
         //send the message
         if (sendto(s, message, strlen(message) , 0 , (struct sockaddr *) &si_other, slen)==-1)
@@ -165,13 +171,14 @@ int main(void)
             if(array[1] == NULL){
                 printf("enter filename");
             }
-            else {
+         else {
                 
-            s = fmount(array[1]); //s is socket fd on server side
+            fd = fmount(array[1]);
             }
         }
         else if(strcmp(array[0], "fumount")==0 && array[1]==NULL){
-            fumount(s);
+           
+            fumount(fd);
             }
         else if(strcmp(array[0], "showsector")==0){
             
@@ -186,23 +193,24 @@ int main(void)
             
         }else if(strcmp(array[0], "structure")==0)
           {
-            printf("%d\n", s);
-            structure(s);
+            fd = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+            printf("%d\n", fd);
+            structure(fd);
            }
         else{
-            printf("invalid");
+            printf("invalid\n");
         }
         
         //receive a reply and print it
         //clear the buffer by filling null, it might have previously received data
-        memset(buf,'\0', BUFLEN);
+        //memset(buf,'\0', BUFLEN);
         //try to receive some data, this is a blocking call
-        if (recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen) == -1)
-        {
-            die("recvfrom()");
-        }
+        //if (recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen) == -1)
+        //{
+            //die("recvfrom()");
+        //}
         
-        puts(buf);
+        //puts(buf);
     }
     
     close(s);
