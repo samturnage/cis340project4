@@ -28,7 +28,7 @@ void die(char *s)
 
 int main(void)
 {
-    struct sockaddr_un si_me, si_other;
+    struct sockaddr si_me, si_other;
     
     int socket_fd, floppy_fd;
     //int slen = sizeof(si_other) , recv_len;
