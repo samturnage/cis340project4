@@ -45,8 +45,8 @@ int fmount(char *hostname)
     }
     
     bzero((char *) &address, sizeof(address));
-    adress.sin_family = AF_INET;
-    adress.sin_port = htons(PORT);
+    address.sin_family = AF_INET;
+    address.sin_port = htons(PORT);
     
     //translate the string IP into an IP adress data type
     if (inet_aton(hostname , &address.sin_addr) == 0)
