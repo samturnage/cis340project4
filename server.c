@@ -11,6 +11,14 @@
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to listen for incoming data
 
+struct packet
+{
+	char *command; //command that is being used
+	short argument;
+	char data[512]; //array to hold data, can hold 1 sector etc
+};
+
+
 void die(char *s)
 {
     perror(s);
@@ -51,13 +59,14 @@ int main(void)
     //keep listening for data
     while(1)
     {
-        printf("Waiting for data...");
+        printf("\nWaiting for data...");
         fflush(stdout);
         
+        packet message;
         //try to receive some data, this is a blocking call
-        if ((recv_len = recvfrom(socket_fd, buf, sizeof(buf), 0, (struct sockaddr *) &si_other, &slen)) == -1)
+        if ((recv_len = recvfrom(socket_fd, message, sizeof(message), 0, (struct sockaddr *) &si_other, &slen)) == -1)
         {
-            die("recvfrom()");
+            die("\nrecvfrom()");
         }
         /*
         if(strcmp(buf, "fmount")==0){
@@ -74,14 +83,17 @@ int main(void)
         */
     
         //print details of the client/peer and the data received
-        printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-        printf("Data: %s\n" , buf);
-        
+        printf("\nReceived packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
+        printf("Command: %s\n" , message.command);
+        printf("Argument: %u\n" , message.argument);
+        printf("Data: %s\n" , message.data);
         //now reply the client with the same data
+        /*
         if (sendto(socket_fd, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
         {
-            die("sendto()");
+            die("\nsendto()");
         }
+        */
     }
     
     close(socket_fd);
