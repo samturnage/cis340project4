@@ -23,6 +23,17 @@ struct packet
 struct sockaddr_in adress;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
 int socket_fd;
 
+
+
+
+
+void die(char *s)
+{
+    perror(s);
+    exit(1);
+}
+
+
 int fmount(char *hostname)
 {
     //////////
@@ -147,13 +158,6 @@ void showsector(int sectorNum)  //, int fdsame here to pass in the fd handler wi
     }
     */
     
-}
-
-
-void die(char *s)
-{
-    perror(s);
-    exit(1);
 }
 
 int main(void)
