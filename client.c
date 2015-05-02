@@ -187,8 +187,14 @@ int main(void)
             p = strtok(NULL, "\n");
             m++;
         }
+        printf("\nargument 0 :%s",arguments[0]);
+        printf("\nargument 1 :%s",arguments[1]);
         
-        if(strcmp(arguments[0], "help")==0)
+        if(strcmp(arguments[0], "quit")==0)
+        {
+            break;
+        }
+        else if(strcmp(arguments[0], "help")==0)
         {
             help();
         }
@@ -203,11 +209,11 @@ int main(void)
                 connected = fmount(arguments[1]);
             }
         }
-        else if(strcmp(arguments[0], "fumount")==0)
+        else if(strcmp(arguments[0], "fumount")==0 && connected==1)
         {
             fumount();
         }
-        else if(strcmp(arguments[0], "showsector")==0)
+        else if(strcmp(arguments[0], "showsector")==0 && connected==1)
         {
             if(arguments[1]==NULL)
             {
@@ -217,19 +223,25 @@ int main(void)
                 showsector(atoi(arguments[1]));
             }
         }
-        else if(strcmp(arguments[0], "structure")==0)
+        else if(strcmp(arguments[0], "structure")==0 && connected==1)
         {
             //fd = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
             //printf("%d\n", fd);
             structure();
         }
-        else if(strcmp(arguments[0], "traverse")==0)
+        else if(strcmp(arguments[0], "traverse")==0 && connected==1)
         {
             traverse(argument[1]);
         }
+        else if(connected==0)
+        {
+            printf("\nYou must first connect to a host using fmount!\n");
+            printf("\nType "help" for a list of commands\n");
+        }
         else
         {
-            printf("Please enter a valid command\n");
+            printf("\nPlease enter a valid command");
+            printf("\nType "help" for a list of commands\n");
         }
     }
     
