@@ -21,7 +21,7 @@ int main(void)
 {
     struct sockaddr_in si_me, si_other;
     
-    int socket_fd, floppy_fd, 
+    int socket_fd, floppy_fd;
     int i, n, slen = sizeof(si_other) , recv_len;
     char buf[BUFLEN];
     char *hostname;
