@@ -19,6 +19,10 @@ struct packet
 		char data[512]; //array to hold data, can hold 1 sector etc
 };
 
+
+struct sockaddr_in adress;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
+int socket_fd;
+
 int fmount(char *hostname)
 {
     //////////
@@ -26,29 +30,40 @@ int fmount(char *hostname)
     /////////
     printf("\nConnecting to host [%s]",hostname);
     
+    if ( (socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    {
+        die("socket");
+    }
     
-    printf("\nConnection failed");
-    return 0;
+    bzero((char *) &adress, sizeof(adress));
+    adress.sin_family = AF_INET;
+    adress.sin_port = htons(PORT);
+    
+    //translate the string IP into an IP adress data type
+    if (inet_aton(hostname , &adress.sin_addr) == 0)
+    {
+        fprintf(stderr, "inet_aton() failed\n");
+        printf("\nConnection failed");
+    	return 0;
+    }
+    /*
+    //int host_fd;
+    mode_t mode = S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
+    host_fd = open(hostname,O_RDONLY,mode);
+    perror("error open  ");
+    return fd;
+	*/
     
     printf("\nConnection successful");
     return 1;
-    /*
-    int fd;
-    mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
-    fd=open(hostname,O_RDONLY,mode);
-    perror("error open  ");
-    return fd;
-    //return 0;
-    */
-    
 }
 //detach from the server
 void fumount() //int fd   
 {
-    /*
-    close(fd);
     
-    */
+    close(socket_fd);
+    
+    
     printf("\nDisconnected from host");
 }
 
@@ -143,28 +158,6 @@ void die(char *s)
 
 int main(void)
 {
-    /*
-    struct sockaddr_in si_other;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
-    int s, slen=sizeof(si_other);
-    char buf[BUFLEN];
-    packet message;
-    
-    if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-    {
-        die("socket");
-    }
-    
-    bzero((char *) &si_other, sizeof(si_other));
-    si_other.sin_family = AF_INET;
-    si_other.sin_port = htons(PORT);
-    
-    if (inet_aton(SERVER , &si_other.sin_addr) == 0)
-    {
-        fprintf(stderr, "inet_aton() failed\n");
-        exit(1);
-    }
-    */
-    //int fd;
     
     char *arguments[10];
     char input[100];
@@ -178,19 +171,7 @@ int main(void)
         printf("~flop:");
         fgets(input, sizeof(input), stdin); //get message size ie data sectors from server
         
-        
         int m = 0;
-        /*
-        char *p;
-        p=strtok(input, "\n");
-        while(p!=NULL){
-            arguments[m] = (char*)malloc(sizeof(p));
-            strcpy(arguments[m], p);
-            p = strtok(NULL, "\n");
-            m++;
-        }
-        */
-        
         arguments[0] = strtok(input, "\n ");
         m = 0;
 	while(arguments[m] != NULL)
@@ -198,7 +179,6 @@ int main(void)
 		m++;
 		arguments[m] = strtok(NULL, "\n ");
 	}
-        
         
         printf("\nargument 0 :%s",arguments[0]);
         printf("\nargument 1 :%s\n",arguments[1]);
@@ -222,34 +202,59 @@ int main(void)
                 connected = fmount(arguments[1]);
             }
         }
-        else if(strcmp(arguments[0], "fumount")==0 && connected==1)
+        else if(strcmp(arguments[0], "fumount")==0)
         {
-            fumount();
+        	if(connected==0)
+	        {
+	            printf("\nYou must first connect to a host using fmount!\n");
+	        }
+	        else
+	        {
+	        	fumount();	
+	        }
         }
-        else if(strcmp(arguments[0], "showsector")==0 && connected==1)
+        else if(strcmp(arguments[0], "showsector")==0)
         {
             if(arguments[1]==NULL)
             {
                 printf("enter a number\n");
-            }else
+            }
+            else
             {
-                showsector(atoi(arguments[1]));
+            	if(connected==0)
+	        {
+	            	printf("\nYou must first connect to a host using fmount!\n");
+	        }
+	        else
+	        {
+	        	showsector(atoi(arguments[1]));	
+	        }
             }
         }
-        else if(strcmp(arguments[0], "structure")==0 && connected==1)
+        else if(strcmp(arguments[0], "structure")==0)
         {
+        	if(connected==0)
+	        {
+	            printf("\nYou must first connect to a host using fmount!\n");
+	        }
+	        else
+	        {
+	        	structure();	
+	        }
             //fd = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
             //printf("%d\n", fd);
-            structure();
         }
-        else if(strcmp(arguments[0], "traverse")==0 && connected==1)
+        else if(strcmp(arguments[0], "traverse")==0)
         {
-            traverse(arguments[1]);
-        }
-        else if(connected==0)
-        {
-            printf("\nYou must first connect to a host using fmount!\n");
-            printf("\nType 'help' for a list of commands\n");
+        	if(connected==0)
+	        {
+	            printf("\nYou must first connect to a host using fmount!\n");
+	        }
+	        else
+	        {
+	        	traverse(arguments[1]);	
+	        }
+            
         }
         else
         {
