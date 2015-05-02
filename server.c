@@ -36,7 +36,7 @@ int main(void)
     //char *hostname;
     
     //create a UDP socket
-    if ((socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ((socket_fd = socket(AF_UNIX, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
     }
@@ -44,7 +44,7 @@ int main(void)
     // zero out the structure
     bzero((char *) &si_me,sizeof(si_me));
     
-    si_me.sin_family = AF_INET;
+    si_me.sin_family = AF_UNIX;
     si_me.sin_port = htons(PORT);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
     
