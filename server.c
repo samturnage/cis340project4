@@ -64,7 +64,7 @@ int main(void)
         
         struct packet message;
         //try to receive some data, this is a blocking call
-        if ((recvfrom(socket_fd, message, sizeof(struct packet), 0, (struct sockaddr*) &si_other, sizeof(si_other))) == -1)
+        if ((recvfrom(socket_fd, &message, sizeof(struct packet), 0, (struct sockaddr*) &si_other, sizeof(si_other))) == -1)
         {
             die("\nrecvfrom()");
         }
