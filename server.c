@@ -22,9 +22,9 @@ int main(void)
     struct sockaddr_in si_me, si_other;
     
     int socket_fd, floppy_fd;
-    int i, n, slen = sizeof(si_other) , recv_len;
+    int slen = sizeof(si_other) , recv_len;
     char buf[BUFLEN];
-    char *hostname;
+    //char *hostname;
     
     //create a UDP socket
     if ((socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -55,7 +55,7 @@ int main(void)
         fflush(stdout);
         
         //try to receive some data, this is a blocking call
-        if ((recv_len = recvfrom(socket_fd, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen)) == -1)
+        if ((recv_len = recvfrom(socket_fd, buf, sizeof(buf), 0, (struct sockaddr *) &si_other, &slen)) == -1)
         {
             die("recvfrom()");
         }
