@@ -95,7 +95,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
     char *message = "structure";
-    if (sendto(soket_fd, message, strlen(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
+    if (sendto(socket_fd, message, strlen(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
     {
             die("sendto()");
     }
