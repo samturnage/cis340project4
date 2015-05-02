@@ -172,7 +172,7 @@ int main(void)
     printf("Enter a command:\n\n");
     while(1)
     {
-        printf("~flop:");
+        printf("\n~flop:");
         fgets(input, sizeof(input), stdin); //get message size ie data sectors from server
         
         int m = 0;
