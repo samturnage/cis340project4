@@ -142,14 +142,11 @@ int main(void)
     char *hostname;
     //char* input[100];
     
+    printf("\nClient-Server floppy reader\n");
+    printf("Enter a command:\n\n");
     while(1)
     {
-        
-        printf("Enter message : \n");
-        printf("client started------\n");
-        
         printf("~flop:");
-        //fgets(input, sizeof(input), stdin);
         fgets(message, sizeof(message), stdin); //get message size ie data sectors from server
         
         //send the message
