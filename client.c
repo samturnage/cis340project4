@@ -39,13 +39,13 @@ int fmount(char *hostname)
     /////////
     printf("\nConnecting to host [%s]",hostname);
     
-    if ( (socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ( (socket_fd = socket(AF_UNIX, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
     }
     
     bzero((char *) &address, sizeof(address));
-    address.sin_family = AF_INET;
+    address.sin_family = AF_UNIX;
     address.sin_port = htons(PORT);
     
     //translate the string IP into an IP adress data type
@@ -97,6 +97,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     //char *message = "structure";
     struct packet message;
     message.command = "structure";
+    message.argument = 3;
     if (sendto(socket_fd, &message, sizeof(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
     {
             die("sendto()");
