@@ -30,8 +30,8 @@ int main(void)
     struct sockaddr_in si_me, si_other;
     
     int socket_fd, floppy_fd;
-    int slen = sizeof(si_other) , recv_len;
-    char buf[BUFLEN];
+    //int slen = sizeof(si_other) , recv_len;
+    //char buf[BUFLEN];
     //char *hostname;
     
     //create a UDP socket
@@ -64,7 +64,7 @@ int main(void)
         
         struct packet message;
         //try to receive some data, this is a blocking call
-        if ((recv_len = recvfrom(socket_fd, message, sizeof(message), 0, (struct sockaddr *) &si_other, &slen)) == -1)
+        if ((recvfrom(socket_fd, message, sizeof(struct packet), 0, (struct sockaddr *) &si_other, sizeof(si_other))) == -1)
         {
             die("\nrecvfrom()");
         }
