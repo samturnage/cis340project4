@@ -17,7 +17,7 @@ struct packet
 		char *cmd; //command that is being used
 		short argument;
 		char data[512]; //array to hold data, can hold 1 sector etc
-}
+};
 
 int fmount(char *hostname)
 {
@@ -236,7 +236,7 @@ int main(void)
         else if(connected==0)
         {
             printf("\nYou must first connect to a host using fmount!\n");
-            printf("\nType "help" for a list of commands\n");
+            printf("\nType 'help' for a list of commands\n");
         }
         else
         {
