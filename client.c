@@ -14,9 +14,9 @@
 
 struct packet
 {
-		char cmd; //command that is being used
+		char *cmd; //command that is being used
 		short argument;
-		char array data[512]; //array to hold data, can hold 1 sector etc
+		char data[512]; //array to hold data, can hold 1 sector etc
 }
 
 int fmount(char *hostname)
@@ -43,7 +43,7 @@ int fmount(char *hostname)
     
 }
 //detach from the server
-void fumount(int fd)    
+void fumount() //int fd   
 {
     /*
     close(fd);
@@ -167,7 +167,7 @@ int main(void)
     //int fd;
     
     char *arguments[10];
-    char* input[100];
+    char input[100];
     
     short connected = 0;//variable so we know if we are connected to server or not
     
@@ -231,7 +231,7 @@ int main(void)
         }
         else if(strcmp(arguments[0], "traverse")==0 && connected==1)
         {
-            traverse(argument[1]);
+            traverse(arguments[1]);
         }
         else if(connected==0)
         {
@@ -241,7 +241,7 @@ int main(void)
         else
         {
             printf("\nPlease enter a valid command");
-            printf("\nType "help" for a list of commands\n");
+            printf("\nType 'help' for a list of commands\n");
         }
     }
     
