@@ -12,22 +12,44 @@
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to send data
 
+struct packet
+{
+		char cmd; //command that is being used
+		short argument;
+		char array data[512]; //array to hold data, can hold 1 sector etc
+}
 
 int fmount(char *hostname)
 {
+    //////////
+    hostname = SERVER;
+    /////////
+    printf("\nConnecting to host [%s]",hostname);
+    
+    
+    printf("\nConnection failed");
+    return 0;
+    
+    printf("\nConnection successful");
+    return 1;
+    /*
     int fd;
     mode_t mode=S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
     fd=open(hostname,O_RDONLY,mode);
     perror("error open  ");
     return fd;
     //return 0;
+    */
     
 }
 //detach from the server
 void fumount(int fd)    
 {
+    /*
     close(fd);
-    printf("file unmounted\n");
+    
+    */
+    printf("\nDisconnected from host");
 }
 
 void help()
@@ -48,11 +70,15 @@ void help()
 
 
 /////////////////////////////////////////////////////////////
-void structure(int fd)   //if we can pass in the fd it will be so much easier
+void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
-    
-    
+    /*
+    if (sendto(s, message, strlen(message) , 0 , (struct sockaddr *) &si_other, slen)==-1)
+    {
+            die("sendto()");
+    }
+    */
     //lseek(fd,0,SEEK_SET);		this will be in the server
     //int n =read(fd,buff,512);
     
@@ -61,7 +87,7 @@ void structure(int fd)   //if we can pass in the fd it will be so much easier
     
        //perror("error read  ");
     
-    printf("flop structure\n");
+    printf("\nflop structure\n");
     printf("\t\tnumber of Fat:\t\t\t\t%d\n",buff[16]);
     printf("\t\tnumber of sectors used by FAT:\t\t%d\n",buff[22]);
     printf("\t\tnumber of sectors per cluster:\t\t%d\n",buff[13]);
@@ -78,8 +104,9 @@ void traverse(short flag)
 {
 }
 /////////////////////////////////////////////////////////////
-void showsector(int sectorNum, int fd)  //same here to pass in the fd handler will be easier!
+void showsector(int sectorNum)  //, int fdsame here to pass in the fd handler will be easier!
 {
+    /*
     unsigned char buff[512];
     int counter=0,i,j,z;
     unsigned int title=0x00;
@@ -103,6 +130,7 @@ void showsector(int sectorNum, int fd)  //same here to pass in the fd handler wi
         }
         printf("\n");
     }
+    */
     
 }
 
@@ -115,10 +143,11 @@ void die(char *s)
 
 int main(void)
 {
+    /*
     struct sockaddr_in si_other;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
-    int s, i, slen=sizeof(si_other);
+    int s, slen=sizeof(si_other);
     char buf[BUFLEN];
-    char message[BUFLEN];
+    packet message;
     
     if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
@@ -134,82 +163,76 @@ int main(void)
         fprintf(stderr, "inet_aton() failed\n");
         exit(1);
     }
+    */
+    //int fd;
     
-    int m=0, j=1;
-    int fd;
-    char *p;
-    char *array[10];
-    char *hostname;
-    //char* input[100];
+    char *arguments[10];
+    char* input[100];
+    
+    short connected = 0;//variable so we know if we are connected to server or not
     
     printf("\nClient-Server floppy reader\n");
     printf("Enter a command:\n\n");
     while(1)
     {
         printf("~flop:");
-        fgets(message, sizeof(message), stdin); //get message size ie data sectors from server
+        fgets(input, sizeof(input), stdin); //get message size ie data sectors from server
         
-        //send the message
-        if (sendto(s, message, strlen(message) , 0 , (struct sockaddr *) &si_other, slen)==-1)
-        {
-            die("sendto()");
-        }
-        p=strtok(message, "\n");
+        int m = 0;
+        char *p;
+        p=strtok(input, "\n");
         while(p!=NULL){
-            array[m] = (char*)malloc(sizeof(p));
-            strcpy(array[m], p);
+            arguments[m] = (char*)malloc(sizeof(p));
+            strcpy(arguments[m], p);
             p = strtok(NULL, "\n");
-            i++;
+            m++;
         }
-        if(strcmp(array[0], "help")==0){
+        
+        if(strcmp(arguments[0], "help")==0)
+        {
             help();
-            
-        }else if (strcmp(array[0], "fmount")==0){
-            if(array[1] == NULL){
-                printf("enter filename");
+        }
+        else if (strcmp(arguments[0], "fmount")==0)
+        {
+            if(arguments[1] == NULL)
+            {
+                printf("\nEnter hostname!\n");
             }
-         else {
-                
-            fd = fmount(array[1]);
+            else 
+            {
+                connected = fmount(arguments[1]);
             }
         }
-        else if(strcmp(array[0], "fumount")==0 && array[1]==NULL){
-           
-            fumount(fd);
-            }
-        else if(strcmp(array[0], "showsector")==0){
-            
-            if(array[1]==NULL)
+        else if(strcmp(arguments[0], "fumount")==0)
+        {
+            fumount();
+        }
+        else if(strcmp(arguments[0], "showsector")==0)
+        {
+            if(arguments[1]==NULL)
             {
                 printf("enter a number\n");
             }else
             {
-                int j = atoi(array[1]);
-                showsector(j, s);
+                showsector(atoi(arguments[1]));
             }
-            
-        }else if(strcmp(array[0], "structure")==0)
-          {
-            fd = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
-            printf("%d\n", fd);
-            structure(fd);
-           }
-        else{
-            printf("invalid\n");
         }
-        
-        //receive a reply and print it
-        //clear the buffer by filling null, it might have previously received data
-        //memset(buf,'\0', BUFLEN);
-        //try to receive some data, this is a blocking call
-        //if (recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen) == -1)
-        //{
-            //die("recvfrom()");
-        //}
-        
-        //puts(buf);
+        else if(strcmp(arguments[0], "structure")==0)
+        {
+            //fd = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+            //printf("%d\n", fd);
+            structure();
+        }
+        else if(strcmp(arguments[0], "traverse")==0)
+        {
+            traverse(argument[1]);
+        }
+        else
+        {
+            printf("Please enter a valid command\n");
+        }
     }
     
-    close(s);
+    //close(s);
     return 0;
 }
