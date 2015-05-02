@@ -19,7 +19,7 @@ struct packet
 	char data[512]; //array to hold data, can hold 1 sector etc
 };
 
-struct sockaddr_in address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
+struct sockaddr_storage address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
 int socket_fd;
 
 
@@ -39,13 +39,13 @@ int fmount(char *hostname)
     /////////
     printf("\nConnecting to host [%s]",hostname);
     
-    if ( (socket_fd = socket(AF_UNIX, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ( (socket_fd = socket(AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
     }
     
     bzero((char *) &address, sizeof(address));
-    address.sin_family = AF_UNIX;
+    address.sin_family = AF_UNSPEC;
     address.sin_port = htons(PORT);
     
     //translate the string IP into an IP adress data type
@@ -98,7 +98,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     struct packet message;
     message.command = "structure";
     message.argument = 3;
-    if (sendto(socket_fd, &message, sizeof(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
+    if (sendto(socket_fd, &message, sizeof(message) , 0 ,  &address, sizeof(address))==-1)
     {
             die("sendto()");
     }
