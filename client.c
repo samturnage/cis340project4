@@ -19,8 +19,7 @@ struct packet
 		char data[512]; //array to hold data, can hold 1 sector etc
 };
 
-
-struct sockaddr_in adress;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
+struct sockaddr_in address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
 int socket_fd;
 
 
@@ -32,7 +31,6 @@ void die(char *s)
     perror(s);
     exit(1);
 }
-
 
 int fmount(char *hostname)
 {
@@ -46,12 +44,12 @@ int fmount(char *hostname)
         die("socket");
     }
     
-    bzero((char *) &adress, sizeof(adress));
+    bzero((char *) &address, sizeof(address));
     adress.sin_family = AF_INET;
     adress.sin_port = htons(PORT);
     
     //translate the string IP into an IP adress data type
-    if (inet_aton(hostname , &adress.sin_addr) == 0)
+    if (inet_aton(hostname , &address.sin_addr) == 0)
     {
         fprintf(stderr, "inet_aton() failed\n");
         printf("\nConnection failed");
@@ -71,10 +69,7 @@ int fmount(char *hostname)
 //detach from the server
 void fumount() //int fd   
 {
-    
     close(socket_fd);
-    
-    
     printf("\nDisconnected from host");
 }
 
@@ -99,12 +94,12 @@ void help()
 void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
-    /*
-    if (sendto(s, message, strlen(message) , 0 , (struct sockaddr *) &si_other, slen)==-1)
+    char *message = "structure"
+    if (sendto(soket_fd, message, strlen(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
     {
             die("sendto()");
     }
-    */
+    
     //lseek(fd,0,SEEK_SET);		this will be in the server
     //int n =read(fd,buff,512);
     
