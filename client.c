@@ -19,7 +19,7 @@ struct packet
 	char data[512]; //array to hold data, can hold 1 sector etc
 };
 
-struct sockaddr_storage address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
+struct sockaddr_in address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
 int socket_fd;
 
 
