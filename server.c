@@ -27,7 +27,7 @@ void die(char *s)
 
 int main(void)
 {
-    struct sockaddr_in si_me, si_other;
+    struct sockaddr_un si_me, si_other;
     
     int socket_fd, floppy_fd;
     //int slen = sizeof(si_other) , recv_len;
@@ -64,7 +64,7 @@ int main(void)
         
         struct packet message;
         //try to receive some data, this is a blocking call
-        if ((recvfrom(socket_fd, message, sizeof(struct packet), 0, (struct sockaddr *) &si_other, sizeof(si_other))) == -1)
+        if ((recvfrom(socket_fd, message, sizeof(struct packet), 0, (struct sockaddr*) &si_other, sizeof(si_other))) == -1)
         {
             die("\nrecvfrom()");
         }
