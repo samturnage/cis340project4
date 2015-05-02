@@ -178,7 +178,9 @@ int main(void)
         printf("~flop:");
         fgets(input, sizeof(input), stdin); //get message size ie data sectors from server
         
+        
         int m = 0;
+        /*
         char *p;
         p=strtok(input, "\n");
         while(p!=NULL){
@@ -187,8 +189,19 @@ int main(void)
             p = strtok(NULL, "\n");
             m++;
         }
+        */
+        
+        arguments[0] = strtok(input, "\n ");
+        m = 0;
+	while(arguments[m] != NULL)
+	{
+		m++;
+		arguments[m] = strtok(NULL, "\n ");
+	}
+        
+        
         printf("\nargument 0 :%s",arguments[0]);
-        printf("\nargument 1 :%s",arguments[1]);
+        printf("\nargument 1 :%s\n",arguments[1]);
         
         if(strcmp(arguments[0], "quit")==0)
         {
