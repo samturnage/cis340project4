@@ -14,9 +14,9 @@
 
 struct packet
 {
-		char *cmd; //command that is being used
-		short argument;
-		char data[512]; //array to hold data, can hold 1 sector etc
+	char *command; //command that is being used
+	short argument;
+	char data[512]; //array to hold data, can hold 1 sector etc
 };
 
 struct sockaddr_in address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
@@ -95,7 +95,9 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
     char *message = "structure";
-    if (sendto(socket_fd, message, strlen(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
+    packet message;
+    message.command = "structure";
+    if (sendto(socket_fd, message, sizeof(message) , 0 , (struct sockaddr *) &address, sizeof(address))==-1)
     {
             die("sendto()");
     }
