@@ -21,12 +21,13 @@ int main(void)
 {
     struct sockaddr_in si_me, si_other;
     
-    int s, i, n, fd, slen = sizeof(si_other) , recv_len;
+    int socket_fd, floppy_fd, 
+    int i, n, slen = sizeof(si_other) , recv_len;
     char buf[BUFLEN];
     char *hostname;
     
     //create a UDP socket
-    if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ((socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
     }
@@ -39,7 +40,7 @@ int main(void)
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
     
     //bind socket to port
-    if( bind(s , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
+    if( bind(socket_fd , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
     {
         die("bind");
     }
@@ -54,13 +55,14 @@ int main(void)
         fflush(stdout);
         
         //try to receive some data, this is a blocking call
-        if ((recv_len = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen)) == -1)
+        if ((recv_len = recvfrom(socket_fd, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen)) == -1)
         {
             die("recvfrom()");
         }
+        /*
         if(strcmp(buf, "fmount")==0){
             
-            fd = open(hostname, O_RDONLY);
+            floppy_fd = open(hostname, O_RDONLY);
         }
         if(strcmp(buf, "structure")==0){
             lseek(fd, 0, SEEK_SET );
@@ -69,19 +71,19 @@ int main(void)
                 die("sendto()");
             }
         }
-
+        */
     
         //print details of the client/peer and the data received
         printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
         printf("Data: %s\n" , buf);
         
         //now reply the client with the same data
-        if (sendto(s, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
+        if (sendto(socket_fd, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
         {
             die("sendto()");
         }
     }
     
-    close(s);
+    close(socket_fd);
     return 0;
 }
