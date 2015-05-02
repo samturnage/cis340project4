@@ -62,7 +62,7 @@ int main(void)
         printf("\nWaiting for data...");
         fflush(stdout);
         
-        packet message;
+        struct packet message;
         //try to receive some data, this is a blocking call
         if ((recv_len = recvfrom(socket_fd, message, sizeof(message), 0, (struct sockaddr *) &si_other, &slen)) == -1)
         {
