@@ -14,6 +14,7 @@
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to listen for incoming data
 
+
 struct packet
 {
 	char *command; //command that is being used
@@ -33,28 +34,28 @@ int main(void)
     struct sockaddr_in si_me, si_other;
     
     int socket_fd, floppy_fd;
-    int slen = sizeof(si_other);
+    int slen;// = sizeof(si_other);
     //, recv_len;
     //char buf[BUFLEN];
     //char *hostname;
-    
+    struct packet *message = malloc(sizeof(struct packet));
     //create a UDP socket
-    if ((socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ((socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
     {
         die("socket");
     }
     
     // zero out the structure
-    bzero((char *) &si_me,sizeof(si_me));
+    memset(&si_me,0,sizeof(si_me));
     
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(PORT);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
     
     //bind socket to port
-    if( bind(socket_fd , &si_me, sizeof(si_me) ) == -1)
+    if( bind(socket_fd ,(struct sockaddr *) &si_me, sizeof(si_me) ) < -1)
     {
-        die("bind");
+        die("bind failed");
     }
     //if((fd = open("imagefile.img", O_RDONLY))<0){
         //perror("no such file");
@@ -65,12 +66,13 @@ int main(void)
     {
         printf("\nWaiting for data...");
         fflush(stdout);
-        
-        struct packet message;
+        slen = sizeof(si_other);
+        //char data[512];
+        //struct packet message;
         //try to receive some data, this is a blocking call
-        if ((recvfrom(socket_fd, &message, sizeof(struct packet), 0,&si_other, &slen)) == -1)
+        if ((recvfrom(socket_fd, &message, sizeof(*packet), 0,(struct sockaddr *)  &si_other, &slen)) < -1)
         {
-            die("\nrecvfrom()");
+            die("\nrecvfrom() failed");
         }
         /*
         if(strcmp(buf, "fmount")==0){
@@ -87,10 +89,14 @@ int main(void)
         */
     
         //print details of the client/peer and the data received
-        printf("\nReceived packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-        printf("Command: %s\n" , message.command);
-        printf("Argument: %u\n" , message.argument);
-        printf("Data: %s\n" , message.data);
+        printf("/nHandling client %s\n", inet_ntoa(si_other.sin_addr));
+        printf("Incoming Length: %u\n", slen);
+        //printf("Received: %s\n", temp->message);
+        
+        //printf("\nReceived packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
+        printf("Command: %s\n" , message->command);
+        printf("Argument: %u\n" , message->argument);
+        printf("Data: %s\n" , message->data);
         //now reply the client with the same data
         /*
         if (sendto(socket_fd, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
