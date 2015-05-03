@@ -100,7 +100,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     message.command = "structure";
     message.argument = 3;
     message.data[0] = "this is a test";
-    if (sendto(socket_fd, (struct Packet*)&message, 1024+sizeof(message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
+    if (sendto(socket_fd, (struct Packet*)&message, sizeof(message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {
             die("Error sending to server");
     }
