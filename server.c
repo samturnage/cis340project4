@@ -95,7 +95,7 @@ int main()
         //printf("Received: %s\n", temp->message);
         
         //printf("\nReceived packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-        //printf("Command: %s\n" , message->);
+        printf("Command: %s\n" , message->command);
         printf("Argument: %u\n" , message->argument);
         //printf("Data: %s\n" , message->data);
         //now reply the client with the same data
