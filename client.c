@@ -97,10 +97,10 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     unsigned char buff[512];
     //char *message = "structure";
     struct Packet *message = malloc(sizeof(struct Packet));;
-    message.argument = 3;
-    strcat(message.command, "structure");
-    strcat(message.data, "this is a test");
-    if (sendto(socket_fd, (struct Packet*)&message, sizeof(message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
+    message->argument = 3;
+    strcat(message->command, "structure");
+    strcat(message->data, "this is a test");
+    if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {
             die("Error sending to server");
     }
