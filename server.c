@@ -2,12 +2,14 @@
 #include<stdio.h> //printf
 #include<string.h> //memset
 #include<stdlib.h> //exit(0);
-#include<sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include<unistd.h>
 #include<sys/types.h>
+#include<sys/socket.h>
 #include<sys/stat.h>
 #include<fcntl.h>
-#include <arpa/inet.h>
+
 
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to listen for incoming data
