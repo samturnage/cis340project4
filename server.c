@@ -34,7 +34,7 @@ int main()
 {
     struct sockaddr_in si_me, si_other;
     
-    int socket_fd, floppy_fd;
+    int socket_fd;//, floppy_fd;
     unsigned int slen;// = sizeof(si_other);
     //, recv_len;
     //char buf[BUFLEN];
@@ -95,8 +95,8 @@ int main()
         //printf("Received: %s\n", temp->message);
         
         //printf("\nReceived packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-        printf("Command: %s\n" , message);
-        //printf("Argument: %u\n" , message->argument);
+        //printf("Command: %s\n" , message->);
+        printf("Argument: %u\n" , message->argument);
         //printf("Data: %s\n" , message->data);
         //now reply the client with the same data
         /*
