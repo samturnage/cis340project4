@@ -15,10 +15,10 @@
 #define PORT 5000   //The port on which to listen for incoming data
 
 
-struct packet
+struct Packet
 {
-	char *command; //command that is being used
 	short argument;
+	char *command; //command that is being used
 	char data[512]; //array to hold data, can hold 1 sector etc
 };
 
@@ -29,16 +29,16 @@ void die(char *s)
     exit(1);
 }
 
-int main(void)
+int main()
 {
     struct sockaddr_in si_me, si_other;
     
     int socket_fd, floppy_fd;
-    int slen;// = sizeof(si_other);
+    unsigned int slen;// = sizeof(si_other);
     //, recv_len;
     //char buf[BUFLEN];
     //char *hostname;
-    struct packet *message = malloc(sizeof(struct packet));
+    struct Packet *message = malloc(sizeof(struct Packet));
     //create a UDP socket
     if ((socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
     {
@@ -70,7 +70,7 @@ int main(void)
         //char data[512];
         //struct packet message;
         //try to receive some data, this is a blocking call
-        if ((recvfrom(socket_fd, &message, sizeof(*packet), 0,(struct sockaddr *)  &si_other, &slen)) < -1)
+        if ((recvfrom(socket_fd, message, sizeof(*message), 0,(struct sockaddr *)  &si_other, &slen)) < -1)
         {
             die("\nrecvfrom() failed");
         }
