@@ -12,11 +12,12 @@
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to send data
 
-struct packet
+struct Packet
 {
-	char *command; //command that is being used
 	short argument;
-	char data[512]; //array to hold data, can hold 1 sector etc
+	char data[512];
+	char *command; //command that is being used
+	 //array to hold data, can hold 1 sector etc
 };
 
 struct sockaddr_in address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
@@ -44,8 +45,8 @@ int fmount(char *hostname)
         die("socket");
     }
     
-    bzero((char *) &address, sizeof(address));
-    address.sin_family = AF_UNSPEC;
+    memset(&address, 0, sizeof(address));
+    address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
     
     //translate the string IP into an IP adress data type
@@ -98,9 +99,9 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     struct packet message;
     message.command = "structure";
     message.argument = 3;
-    if (sendto(socket_fd, &message, sizeof(message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
+    if (sendto(socket_fd, (struct Packet*)&message, 1024+sizeof(message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {
-            die("sendto()");
+            die("Error sending to server");
     }
     
     //lseek(fd,0,SEEK_SET);		this will be in the server
