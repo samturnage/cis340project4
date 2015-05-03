@@ -38,6 +38,15 @@ int fmount(char *hostname)
     //////////
     hostname = SERVER;
     /////////
+    struct hostent *entry;
+    entry = gethostbyname(hostname);
+    if(!entry)
+    {
+    	die("could not find hostname");
+    }
+    printf("\nIP address: %s",inet_ntoa((struct inaddr **)entry->h_addr_list));
+    
+    
     printf("\nConnecting to host [%s]",hostname);
     
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
