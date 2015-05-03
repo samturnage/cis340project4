@@ -31,12 +31,13 @@ int main(void)
     struct sockaddr_in si_me, si_other;
     
     int socket_fd, floppy_fd;
-    //int slen = sizeof(si_other) , recv_len;
+    int slen = sizeof(si_other);
+    //, recv_len;
     //char buf[BUFLEN];
     //char *hostname;
     
     //create a UDP socket
-    if ((socket_fd = socket(AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ((socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
     }
@@ -44,12 +45,12 @@ int main(void)
     // zero out the structure
     bzero((char *) &si_me,sizeof(si_me));
     
-    si_me.sin_family = AF_UNSPEC;
+    si_me.sin_family = AF_INET;
     si_me.sin_port = htons(PORT);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
     
     //bind socket to port
-    if( bind(socket_fd , (struct sockaddr *)&si_me, sizeof(si_me) ) == -1)
+    if( bind(socket_fd , &si_me, sizeof(si_me) ) == -1)
     {
         die("bind");
     }
@@ -65,7 +66,7 @@ int main(void)
         
         struct packet message;
         //try to receive some data, this is a blocking call
-        if ((recvfrom(socket_fd, &message, sizeof(struct packet), 0,(struct sockaddr *)&si_other, sizeof(si_other))) == -1)
+        if ((recvfrom(socket_fd, &message, sizeof(struct packet), 0,&si_other, &slen)) == -1)
         {
             die("\nrecvfrom()");
         }
