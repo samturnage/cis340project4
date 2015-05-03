@@ -18,9 +18,9 @@
 struct Packet
 {
 	short argument;
-	char data[512];
+	char data[512];//array to hold data, can hold 1 sector etc
 	char command[32]; //command that is being used
-	 //array to hold data, can hold 1 sector etc
+	 
 };
 
 
@@ -35,10 +35,7 @@ int main()
     struct sockaddr_in si_me, si_other;
     
     int socket_fd;//, floppy_fd;
-    unsigned int slen;// = sizeof(si_other);
-    //, recv_len;
-    //char buf[BUFLEN];
-    //char *hostname;
+    unsigned int slen;
     struct Packet *message = malloc(sizeof(struct Packet));
     //create a UDP socket
     if ((socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
@@ -68,8 +65,6 @@ int main()
         printf("\nWaiting for data...");
         fflush(stdout);
         slen = sizeof(si_other);
-        //char data[512];
-        //struct packet message;
         //try to receive some data, this is a blocking call
         if ((recvfrom(socket_fd, message, sizeof(*message), 0,(struct sockaddr *)  &si_other, &slen)) < 0)
         {
@@ -90,14 +85,12 @@ int main()
         */
     
         //print details of the client/peer and the data received
-        printf("/nHandling client %s\n", inet_ntoa(si_other.sin_addr));
-        printf("Incoming Length: %u\n", slen);
-        //printf("Received: %s\n", temp->message);
-        
-        //printf("\nReceived packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
-        //printf("Command: %s\n" , message->command);
-        printf("Argument: %u\n" , message->argument);
-        printf("Data: %s\n" , message->data);
+        printf("\nHandling client %s\n", inet_ntoa(si_other.sin_addr));
+        printf("\nIncoming Length: %u\n", slen);
+
+        printf("\nCommand: %s" , message->command);
+        printf("\nArgument: %u" , message->argument);
+        printf("\nData: %s" , message->data);
         //now reply the client with the same data
         /*
         if (sendto(socket_fd, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
