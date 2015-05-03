@@ -40,7 +40,7 @@ int fmount(char *hostname)
     /////////
     printf("\nConnecting to host [%s]",hostname);
     
-    if ( (socket_fd = socket(AF_UNSPEC, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+    if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
     }
