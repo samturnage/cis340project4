@@ -96,7 +96,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
     //char *message = "structure";
-    struct Packet message;
+    struct Packet *message = malloc(sizeof(struct Packet));;
     message.argument = 3;
     strcat(message.command, "structure");
     strcat(message.data, "this is a test");
@@ -121,9 +121,6 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     printf("\t\tnumber of bytes per sector:\t\t%d\n",buff[11]|buff[12]<<8);
     
     printf("\t\t---Sector #---\t\t---Sector Types---\n");
-    //int x,y,z;
-    
-    
 }
 /////////////////////////////////////////////////////////////
 void traverse(char *flag)
@@ -168,8 +165,9 @@ int main(void)
     
     short connected = 0;//variable so we know if we are connected to server or not
     
-    printf("\nClient-Server floppy reader\n");
-    printf("Enter a command:\n\n");
+    printf("\nClient-Server floppy reader");
+    printf("\n===========================");
+    printf("\nEnter a command:");
     while(1)
     {
         printf("\n~flop:");
@@ -183,9 +181,6 @@ int main(void)
 		m++;
 		arguments[m] = strtok(NULL, "\n ");
 	}
-        
-        printf("\nargument 0 :%s",arguments[0]);
-        printf("\nargument 1 :%s\n",arguments[1]);
         
         if(strcmp(arguments[0], "quit")==0)
         {
