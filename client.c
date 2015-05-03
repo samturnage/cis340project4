@@ -176,6 +176,9 @@ int main(void)
     
     printf("\nClient-Server floppy reader");
     printf("\n===========================");
+    
+    printf("\nNOTE: when using fmount, enter any hostname, this needs to be fixed later");
+    
     printf("\nEnter a command:");
     while(1)
     {
