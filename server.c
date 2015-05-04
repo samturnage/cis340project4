@@ -60,6 +60,7 @@ int main()
     //}
     
     //keep listening for data
+    
     while(1)
     {
         printf("\nWaiting for data...");
@@ -92,12 +93,12 @@ int main()
         printf("\nArgument: %u" , message->argument);
         printf("\nData: %s" , message->data);
         //now reply the client with the same data
-        /*
-        if (sendto(socket_fd, buf, recv_len, 0, (struct sockaddr*) &si_other, slen) == -1)
+        
+        if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
         {
             die("\nsendto()");
         }
-        */
+        
     }
     
     close(socket_fd);
