@@ -154,10 +154,10 @@ void showsector(short sectorNum)
         col=col+0x01;}
     printf("\n");
     for(i=0; i<32;i++){   //format row
-        printf("%x ", title);
+        printf("%x\t", title);
         title=title+0x10;
         for(j=0; j<16; j++){
-            printf("%x", message->data[counter]);
+            printf("  %x", message->data[counter]);
             counter++;
         }
         printf("\n");
