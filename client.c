@@ -133,7 +133,7 @@ void showsector(short sectorNum)
 {
     struct Packet *message = malloc(sizeof(struct Packet));
     strcat(message->command, "showsector");
-    message->argument = sectornum;
+    message->argument = sectorNum;
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {
             die("Error sending to server");
