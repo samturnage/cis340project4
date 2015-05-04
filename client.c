@@ -22,9 +22,7 @@ struct Packet
 
 struct sockaddr_in address;          //gethostbyname is obsolete if you google it you will find this so I used local host function so why it did not work
 int socket_fd;
-
-
-
+unsigned int addrlen;
 
 
 void die(char *s)
@@ -66,14 +64,7 @@ int fmount(char *hostname)
         printf("\nConnection failed");
     	return 0;
     }
-    /*
-    //int host_fd;
-    mode_t mode = S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH;
-    host_fd = open(hostname,O_RDONLY,mode);
-    perror("error open  ");
-    return fd;
-	*/
-    
+    addrlen = sizeof(address);
     printf("\nConnection successful");
     return 1;
 }
@@ -106,42 +97,38 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     //unsigned char buff[512];
     //char *message = "structure";
-    unsigned int addrlen = sizeof(address);
     
     struct Packet *message = malloc(sizeof(struct Packet));
-    message->argument = 3;
     strcat(message->command, "structure");
-    strcat(message->data, "this is a test");
-    
-    
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {
             die("Error sending to server");
     }
+    //struct Packet *recvmessage = malloc(sizeof(struct Packet));
     
-    
-    struct Packet *recvmessage = malloc(sizeof(struct Packet));
-    //lseek(fd,0,SEEK_SET);		this will be in the server
-    //int n =read(fd,buff,512);
-    
-    if ((recvfrom(socket_fd, (struct Packet*)recvmessage, sizeof(*recvmessage), 0,(struct sockaddr *) &address,&addrlen )) < 0)
+    if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {
             die("\nrecvfrom() failed");
     }
-    printf("\nCommand: %s" , recvmessage->command);
-    printf("\nArgument: %u" , recvmessage->argument);
+    printf("\nCommand: %s" , message->command);
+    printf("\nArgument: %u" , message->argument);
     //printf("\nData: %s" , recvmessage->data);
     
        //perror("error read  ");
     
     printf("\nflop structure\n");
-    printf("\t\tnumber of Fat:\t\t\t\t%d\n",recvmessage->data[16]);
-    printf("\t\tnumber of sectors used by FAT:\t\t%d\n",recvmessage->data[22]);
-    printf("\t\tnumber of sectors per cluster:\t\t%d\n",recvmessage->data[13]);
-    printf("\t\tnumber of ROOT Enteries:\t\t%d\n",recvmessage->data[17]|recvmessage->data[18]<<8);
-    printf("\t\tnumber of bytes per sector:\t\t%d\n",recvmessage->data[11]|recvmessage->data[12]<<8);
+    printf("\t\tnumber of Fat:\t\t\t\t%d\n",message->data[16]);
+    printf("\t\tnumber of sectors used by FAT:\t\t%d\n",message->data[22]);
+    printf("\t\tnumber of sectors per cluster:\t\t%d\n",message->data[13]);
+    printf("\t\tnumber of ROOT Enteries:\t\t%d\n",message->data[17]|message->data[18]<<8);
+    printf("\t\tnumber of bytes per sector:\t\t%d\n",message->data[11]|message->data[12]<<8);
     
     printf("\t\t---Sector #---\t\t---Sector Types---\n");
+    printf("\t\t----------		----------\n");
+    printf("\t\t0			BOOT\n");
+    printf("\t\t01 -- 09		FAT1\n");
+    printf("\t\t10 -- 18		FAT2\n");
+    printf("\t\t19 -- 32		ROOT DIRECTORY\n");
 }
 /////////////////////////////////////////////////////////////
 void traverse(char *flag)
@@ -150,7 +137,11 @@ void traverse(char *flag)
 /////////////////////////////////////////////////////////////
 void showsector(int sectorNum)  //, int fdsame here to pass in the fd handler will be easier!
 {
+    
+    
+    
     /*
+    
     unsigned char buff[512];
     int counter=0,i,j,z;
     unsigned int title=0x00;
