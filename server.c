@@ -77,9 +77,8 @@ int main()
          
         if(strcmp(message->command, "structure")==0){
             lseek(floppy_fd, 0, SEEK_SET );
-            char flop[512];
-            read(floppy_fd, flop, sizeof(flop));
-            printf("\nData: %*s",512 , flop);
+            read(floppy_fd, message->data, sizeof(message->data));
+            //printf("\nData: %*s",512 , flop);
             if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
             {
             	die("\nsendto()");
