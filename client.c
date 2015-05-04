@@ -105,7 +105,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
 {
     unsigned char buff[512];
     //char *message = "structure";
-    struct Packet *message = malloc(sizeof(struct Packet));;
+    struct Packet *message = malloc(sizeof(struct Packet));
     message->argument = 3;
     strcat(message->command, "structure");
     strcat(message->data, "this is a test");
@@ -113,12 +113,17 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     {
             die("Error sending to server");
     }
-    
+    struct Packet *recvmessage = malloc(sizeof(struct Packet));
     //lseek(fd,0,SEEK_SET);		this will be in the server
     //int n =read(fd,buff,512);
     
-    //buff = getfromserver
-    //buff = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
+    if ((recvfrom(socket_fd, recvmessage, sizeof(*recvmessage), 0,(struct sockaddr *)  &address, sizeof(address))) < 0)
+    {
+            die("\nrecvfrom() failed");
+    }
+    printf("\nCommand: %s" , recvmessage->command);
+    printf("\nArgument: %u" , recvmessage->argument);
+    printf("\nData: %s" , recvmessage->data);
     
        //perror("error read  ");
     
