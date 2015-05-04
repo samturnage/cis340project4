@@ -38,6 +38,7 @@ int fmount(char *hostname)
     //////////
     hostname = SERVER;
     /////////
+    /*
     struct hostent *entry;
     entry = gethostbyname(hostname);
     if(!entry)
@@ -45,7 +46,7 @@ int fmount(char *hostname)
     	die("could not find hostname");
     }
     printf("\nIP address: %s",inet_ntoa((struct inaddr **)entry->h_addr_list));
-    
+    */
     
     printf("\nConnecting to host [%s]",hostname);
     
@@ -116,8 +117,8 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     struct Packet *recvmessage = malloc(sizeof(struct Packet));
     //lseek(fd,0,SEEK_SET);		this will be in the server
     //int n =read(fd,buff,512);
-    
-    if ((recvfrom(socket_fd, recvmessage, sizeof(*recvmessage), 0,(struct sockaddr *)  &address, sizeof(address))) < 0)
+    int addrlen = sizeof(address);
+    if ((recvfrom(socket_fd, (struct Packet*)recvmessage, sizeof(*recvmessage), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {
             die("\nrecvfrom() failed");
     }
