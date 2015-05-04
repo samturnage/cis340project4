@@ -104,20 +104,26 @@ void help()
 /////////////////////////////////////////////////////////////
 void structure()   //int fdif we can pass in the fd it will be so much easier
 {
-    unsigned char buff[512];
+    //unsigned char buff[512];
     //char *message = "structure";
+    unsigned int addrlen = sizeof(address);
+    
     struct Packet *message = malloc(sizeof(struct Packet));
     message->argument = 3;
     strcat(message->command, "structure");
     strcat(message->data, "this is a test");
+    
+    
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {
             die("Error sending to server");
     }
+    
+    
     struct Packet *recvmessage = malloc(sizeof(struct Packet));
     //lseek(fd,0,SEEK_SET);		this will be in the server
     //int n =read(fd,buff,512);
-    int addrlen = sizeof(address);
+    
     if ((recvfrom(socket_fd, (struct Packet*)recvmessage, sizeof(*recvmessage), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {
             die("\nrecvfrom() failed");
