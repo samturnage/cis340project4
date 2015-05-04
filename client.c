@@ -222,6 +222,7 @@ int main(void)
 	        else
 	        {
 	        	fumount();	
+	        	connected = 0;
 	        }
         }
         else if(strcmp(arguments[0], "showsector")==0)
@@ -252,8 +253,6 @@ int main(void)
 	        {
 	        	structure();	
 	        }
-            //fd = recvfrom(s, buf, BUFLEN, 0, (struct sockaddr *) &si_other, &slen);
-            //printf("%d\n", fd);
         }
         else if(strcmp(arguments[0], "traverse")==0)
         {
@@ -265,7 +264,6 @@ int main(void)
 	        {
 	        	traverse(arguments[1]);	
 	        }
-            
         }
         else
         {
@@ -274,6 +272,5 @@ int main(void)
         }
     }
     
-    //close(s);
     return 0;
 }
