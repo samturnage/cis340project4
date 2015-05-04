@@ -130,7 +130,7 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     }
     printf("\nCommand: %s" , recvmessage->command);
     printf("\nArgument: %u" , recvmessage->argument);
-    printf("\nData: %s" , recvmessage->data);
+    //printf("\nData: %s" , recvmessage->data);
     
        //perror("error read  ");
     
