@@ -18,7 +18,7 @@
 struct Packet
 {
 	short argument;
-	char data[512];//array to hold data, can hold 1 sector etc
+	unsigned char data[512];//array to hold data, can hold 1 sector etc
 	char command[32]; //command that is being used
 	 
 };
