@@ -104,17 +104,11 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     {
             die("Error sending to server");
     }
-    //struct Packet *recvmessage = malloc(sizeof(struct Packet));
-    
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {
             die("\nrecvfrom() failed");
     }
-    printf("\nCommand: %s" , message->command);
-    printf("\nArgument: %u" , message->argument);
-    //printf("\nData: %s" , recvmessage->data);
     
-       //perror("error read  ");
     
     printf("\nflop structure\n");
     printf("\t\tnumber of Fat:\t\t\t\t%d\n",message->data[16]);
@@ -135,23 +129,26 @@ void traverse(char *flag)
 {
 }
 /////////////////////////////////////////////////////////////
-void showsector(int sectorNum)  //, int fdsame here to pass in the fd handler will be easier!
+void showsector(short sectorNum)
 {
+    struct Packet *message = malloc(sizeof(struct Packet));
+    strcat(message->command, "showsector");
+    message->argument = sectornum;
+    if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
+    {
+            die("Error sending to server");
+    }
+    if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
+    {
+            die("\nrecvfrom() failed");
+    }
     
-    
-    
-    /*
-    
-    unsigned char buff[512];
     int counter=0,i,j,z;
     unsigned int title=0x00;
     unsigned int col=0x00;
     
-    //lseek(fd,sectorNum*512,SEEK_SET);
-    //read(fd,buff,512);
-    perror("error read");
     
-    printf("flop:showsector %d\n",sectorNum);
+    printf("\nSector : %u\n",sectorNum);
     for(z=0; z<16; z++){   //format column
         printf("\t%x", col);
         col=col+0x01;}
@@ -160,12 +157,12 @@ void showsector(int sectorNum)  //, int fdsame here to pass in the fd handler wi
         printf("%x\t", title);
         title=title+0x10;
         for(j=0; j<16; j++){
-            printf("%x\t", buff[counter]);
+            printf("%x\t", message->data[counter]);
             counter++;
         }
         printf("\n");
     }
-    */
+    
     
 }
 
