@@ -33,34 +33,30 @@ void die(char *s)
 int main()
 {
     struct sockaddr_in si_me, si_other;
-    
-    int socket_fd;//, floppy_fd;
+    int socket_fd, floppy_fd;
     unsigned int slen;
     struct Packet *message = malloc(sizeof(struct Packet));
+    
     //create a UDP socket
     if ((socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
     {
         die("socket");
     }
-    
     // zero out the structure
     memset(&si_me,0,sizeof(si_me));
-    
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(PORT);
     si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-    
     //bind socket to port
     if( bind(socket_fd ,(struct sockaddr *) &si_me, sizeof(si_me) ) < 0)
     {
         die("bind failed");
     }
-    //if((fd = open("imagefile.img", O_RDONLY))<0){
-        //perror("no such file");
-    //}
+    if((floppy_fd = open("./imagefile.img", O_RDONLY))<0){
+        perror("no such file");
+    }
     
     //keep listening for data
-    
     while(1)
     {
         printf("\nWaiting for data...");
@@ -71,36 +67,28 @@ int main()
         {
             die("\nrecvfrom() failed");
         }
-        /*
-        if(strcmp(buf, "fmount")==0){
-            
-            floppy_fd = open(hostname, O_RDONLY);
-        }
-        if(strcmp(buf, "structure")==0){
-            lseek(fd, 0, SEEK_SET );
-            while((n = read(fd, buf, BUFLEN)) > 0){
-                sendto(s, buf, recv_len, 0, (struct sockaddr*)&si_other, slen);
-                die("sendto()");
-            }
-        }
-        */
-    
         //print details of the client/peer and the data received
         printf("\nHandling client %s\n", inet_ntoa(si_other.sin_addr));
         printf("\nIncoming Length: %u\n", slen);
-
         printf("\nCommand: %s" , message->command);
         printf("\nArgument: %u" , message->argument);
         printf("\nData: %s" , message->data);
         //now reply the client with the same data
-        
-        if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
-        {
-            die("\nsendto()");
+         
+        if(strcmp(message->command, "structure")==0){
+            lseek(floppy_fd, 0, SEEK_SET );
+            int n;
+            read(floppy_fd, message->data, sizeof(message->data)));
+            if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
+            {
+            	die("\nsendto()");
+            }
         }
         
+        
+        
     }
-    
+    close(floppy_fd);
     close(socket_fd);
     return 0;
 }
