@@ -84,6 +84,16 @@ int main()
             	die("\nsendto()");
             }
         }
+        if(strcmp(message->command, "showsector")==0){
+            lseek(floppy_fd, massage->argument*512, SEEK_SET );
+            read(floppy_fd, message->data, sizeof(message->data));
+            //printf("\nData: %*s",512 , flop);
+            if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
+            {
+            	die("\nsendto()");
+            }
+        }
+
         
         
         
