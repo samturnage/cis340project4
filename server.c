@@ -77,8 +77,7 @@ int main()
          
         if(strcmp(message->command, "structure")==0){
             lseek(floppy_fd, 0, SEEK_SET );
-            int n;
-            read(floppy_fd, message->data, sizeof(message->data)));
+            read(floppy_fd, message->data, sizeof(message->data));
             if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
             {
             	die("\nsendto()");
