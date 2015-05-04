@@ -150,14 +150,14 @@ void showsector(short sectorNum)
     
     printf("\nSector : %u\n",sectorNum);
     for(z=0; z<16; z++){   //format column
-        printf("\t%x", col);
+        printf("  %x", col);
         col=col+0x01;}
     printf("\n");
     for(i=0; i<32;i++){   //format row
-        printf("%x\t", title);
+        printf("%x ", title);
         title=title+0x10;
         for(j=0; j<16; j++){
-            printf("%x\t", message->data[counter]);
+            printf("%x", message->data[counter]);
             counter++;
         }
         printf("\n");
