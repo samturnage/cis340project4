@@ -76,8 +76,8 @@ int main()
         //now reply the client with the same data
          
         if(strcmp(message->command, "structure")==0){
-            lseek(3, 0, SEEK_SET );
-            read(3, message->data, 512);
+            lseek(floppy_fd, 0, SEEK_SET );
+            read(floppy_fd, *message->data, sizeof(message->data));
             printf("\nData: %s" , message->data);
             if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
             {
