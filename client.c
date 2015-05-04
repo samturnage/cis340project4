@@ -135,11 +135,11 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
        //perror("error read  ");
     
     printf("\nflop structure\n");
-    printf("\t\tnumber of Fat:\t\t\t\t%d\n",buff[16]);
-    printf("\t\tnumber of sectors used by FAT:\t\t%d\n",buff[22]);
-    printf("\t\tnumber of sectors per cluster:\t\t%d\n",buff[13]);
-    printf("\t\tnumber of ROOT Enteries:\t\t%d\n",buff[17]|buff[18]<<8);
-    printf("\t\tnumber of bytes per sector:\t\t%d\n",buff[11]|buff[12]<<8);
+    printf("\t\tnumber of Fat:\t\t\t\t%d\n",recvmessage->data[16]);
+    printf("\t\tnumber of sectors used by FAT:\t\t%d\n",recvmessage->data[22]);
+    printf("\t\tnumber of sectors per cluster:\t\t%d\n",recvmessage->data[13]);
+    printf("\t\tnumber of ROOT Enteries:\t\t%d\n",recvmessage->data[17]|recvmessage->data[18]<<8);
+    printf("\t\tnumber of bytes per sector:\t\t%d\n",recvmessage->data[11]|recvmessage->data<<8);
     
     printf("\t\t---Sector #---\t\t---Sector Types---\n");
 }
