@@ -117,12 +117,15 @@ void structure()   //int fdif we can pass in the fd it will be so much easier
     printf("\t\tnumber of ROOT Enteries:\t\t%d\n",message->data[17]|message->data[18]<<8);
     printf("\t\tnumber of bytes per sector:\t\t%d\n",message->data[11]|message->data[12]<<8);
     
-    printf("\t\t---Sector #---\t\t---Sector Types---\n");
-    printf("\t\t----------		----------\n");
-    printf("\t\t0			BOOT\n");
-    printf("\t\t01 -- 09		FAT1\n");
-    printf("\t\t10 -- 18		FAT2\n");
-    printf("\t\t19 -- 32		ROOT DIRECTORY\n");
+    int x,z;
+    x=(message->data[22] * message->data[16]);
+    z=x+(((message->data[17]| message->data[18] << 8) * 32)/ (message->data[11] | message->data[12]<<8));
+    printf("\t\t----------------	------------------\n");
+    printf("\t\t\t0\t\t\tBOOT\n");
+    printf("\t\t\t1--%d\t\t\tFAT1\n",message->data[22]);
+    printf("\t\t\t%d--%d\t\t\tFAT2\n", message->data[22] + 1,x);
+    printf("\t\t\t%d--%d\t\t\tROOT DIRECTORY\n", x + 1, z);
+    
 }
 /////////////////////////////////////////////////////////////
 void traverse(char *flag)
@@ -150,14 +153,14 @@ void showsector(short sectorNum)
     
     printf("\nSector : %u\n",sectorNum);
     for(z=0; z<16; z++){   //format column
-        printf("  %x", col);
+        printf("%4x", col);
         col=col+0x01;}
     printf("\n");
     for(i=0; i<32;i++){   //format row
-        printf("%x\t", title);
+        printf("%4x\t", title);
         title=title+0x10;
         for(j=0; j<16; j++){
-            printf("  %x", message->data[counter]);
+            printf("%4x", message->data[counter]);
             counter++;
         }
         printf("\n");
