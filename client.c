@@ -256,8 +256,9 @@ void traverse(char *argument)
   //get info back from client
   if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
   {die("\nrecvfrom() failed");}
-  for (int i = 0; i < sizeof(uint16_t); i++)
-        num_root_dir = (num_root_dir << 8) + ((unsigned char) message->data[i]);
+  int f;
+  for (f=0; f < sizeof(uint16_t); f++)
+        num_root_dir = (num_root_dir << 8) + ((unsigned char) message->data[f]);
   //num_root_dir = (uint16_t)(
    //        (message->data[0]) << 8 | 
     //       (message->data[1])
