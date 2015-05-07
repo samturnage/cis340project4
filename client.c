@@ -261,7 +261,8 @@ void traverse(char *argument)
   temp[1] = message->data[1];
   num_root_dir = atoi(temp);
   
-  /* now start to read the directory entries */
+  // now start to read the directory entries 
+  /*
   for (i = 0; i < num_root_dir; i++) {
     memset(&de, 0, sizeof(de));
     memset(message->data, 0, sizeof(message->data));
@@ -282,19 +283,20 @@ void traverse(char *argument)
     
     
     if (de.name[0] == SLOT_EMPTY) {
-      /* this slot has not been used, means the end of the directory */
+      // this slot has not been used, means the end of the directory 
       break;
     }
     if ((uint8_t)de.name[0] == SLOT_DELETED) {
-      /* this is a deleted slot */
+      // this is a deleted slot
       continue;
     }
     if ((de.attribute & ATTR_VOLUME) != 0) {
       continue;
-    } else { /* otherwise print the entry */
+    } else { // otherwise print the entry 
       displayEntry(&de, flag);
     }
   }
+  */
 }
 
 /////////////////////////////////////////////////////////////
