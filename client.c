@@ -58,12 +58,12 @@ void die(char *s)
 int fmount(char *hostname)
 {
     struct hostent *entry;
-    entry = gethostbyname(hostname);
+    entry = gethostbyname2(hostname,AF_INET);
     if(!entry)
     {
     	die("could not find hostname");
     }
-    
+    printf("/n %s /n"entry->h_addr);
     
     printf("\nConnecting to host [%s]",hostname);
     hostname = entry->h_addr;
