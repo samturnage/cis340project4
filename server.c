@@ -114,6 +114,7 @@ int main()
 	    }
 	    else if(message->argument>0)//return data for directories
 	    {
+	    	
 	    	read(floppy_fd, message->data, (int)message->argument);
 	    	if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
 	        {    	die("\nsendto()");}
