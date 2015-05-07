@@ -265,7 +265,7 @@ void traverse(char *argument)
   
   for (i = 0; i < num_root_dir; i++) {
     memset(&de, 0, sizeof(de));
-    memset(message->data, 0, sizeof(message->data));
+    //memset(message->data, 0, sizeof(message->data));
     message->argument = sizeof(de);
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {die("Error sending to server");}
@@ -273,7 +273,6 @@ void traverse(char *argument)
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
     
-    message->data
     
     &de = (struct direntry *)message->data;
     //de.name = message[10]
