@@ -66,7 +66,7 @@ int fmount(char *hostname)
     printf("/n %s /n",entry->h_addr_list[0]);
     
     printf("\nConnecting to host [%s]",entry->h_name);
-    hostname = inet_ntoa( (struct in_addr)entry->h_addr_list[0] ) ;
+    hostname = inet_ntoa( **((struct in_addr **)entry->h_addr_list[0])) ;
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
