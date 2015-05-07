@@ -63,10 +63,10 @@ int fmount(char *hostname)
     {
     	die("could not find hostname");
     }
-    hostname = inet_ntoa(entry->h_addr);
+    
     
     printf("\nConnecting to host [%s]",hostname);
-    
+    hostname = entry->h_addr;
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
