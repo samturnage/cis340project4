@@ -108,7 +108,7 @@ int main()
 		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512, SEEK_SET);
 		  printf("\nnumfat:%x",num_fat);
 		  printf("\nsizefat:%u",size_fat);
-		  printf("\nroot:%x,%x",message->data[0],message->data[1]);
+		  printf("\nroot:%c,%c",message->data[0],message->data[1]);
 		  if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
 	          {
 	            	die("\nsendto()");
