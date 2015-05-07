@@ -63,10 +63,8 @@ int fmount(char *hostname)
     {
     	die("could not find hostname");
     }
-    printf("\n %s \n",entry->h_addr);
-    
     printf("\nConnecting to host [%s]",entry->h_name);
-    
+    char *hostIP = entry->h_addr;
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
