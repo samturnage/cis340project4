@@ -23,7 +23,6 @@ struct Packet
 	 
 };
 
-
 void die(char *s)
 {
     perror(s);
@@ -68,8 +67,8 @@ int main()
             die("\nrecvfrom() failed");
         }
         //print details of the client/peer and the data received
-        printf("\nHandling client %s\n", inet_ntoa(si_other.sin_addr));
-        printf("\nIncoming Length: %u\n", slen);
+        printf("\nHandling client %s", inet_ntoa(si_other.sin_addr));
+        printf("\nIncoming Length: %u", slen);
         printf("\nCommand: %s" , message->command);
         printf("\nArgument: %u" , message->argument);
         printf("\nData: %s" , message->data);
@@ -84,7 +83,7 @@ int main()
             	die("\nsendto()");
             }
         }
-        if(strcmp(message->command, "showsector")==0){
+        else if(strcmp(message->command, "showsector")==0){
             lseek(floppy_fd, message->argument*512, SEEK_SET );
             read(floppy_fd, message->data, sizeof(message->data));
             //printf("\nData: %*s",512 , flop);
@@ -93,7 +92,33 @@ int main()
             	die("\nsendto()");
             }
         }
-
+	else if(strcmp(message->command, "traverse")==0){
+	    
+	    if(message->argument==0)//init, get ready for reading traverse data
+	    {
+	    	  char num_fat;
+  		  uint16_t size_fat;
+  		  
+	    	  lseek(floppy_fd, 16, SEEK_SET);
+		  read(floppy_fd, &num_fat, 1);
+		  //read the number of root directories to be returned
+		  //we are using argument instead of data becuse it is already a short which we need
+		  read(floppy_fd, message->argument, 2);
+		  lseek(floppy_fd, 22, SEEK_SET);
+		  read(floppy_fd, &size_fat, 2);
+		  /* seek to the beginning of root directory */
+		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512, SEEK_SET);
+		  if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
+	          {
+	            	die("\nsendto()");
+	          }
+	    }
+	    else if(message->argument>0)//return data for directories
+	    {
+	    	
+	    	
+	    }
+	}
         
         
         
@@ -102,3 +127,6 @@ int main()
     close(socket_fd);
     return 0;
 }
+
+
+
