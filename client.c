@@ -261,7 +261,7 @@ void traverse(char *argument)
   for (f=0; f < sizeof(uint16_t); f++)
         num_root_dir = (num_root_dir << 8) + ((unsigned char) message->data[f]);
         */
-  num_root_dir = (((short)message->data[0]) << 8) | message->data[1];
+  num_root_dir = (((short)message->data[1]) << 8) | message->data[0];
   //num_root_dir = message->data[0]|message->data[1]<<8;
   //num_root_dir = (uint16_t)(
   //         (message->data[0]) << 8 | 
