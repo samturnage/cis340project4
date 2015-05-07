@@ -257,9 +257,9 @@ void traverse(char *argument)
   if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
   {die("\nrecvfrom() failed");}
   char temp[2];
-  temp[0] = data[0];
-  temp[1] = data[1];
-  num_root_dir = *(unsigned short *)message->argument;
+  temp[0] = message->data[0];
+  temp[1] = message->data[1];
+  num_root_dir = atoi(temp);
   
   /* now start to read the directory entries */
   for (i = 0; i < num_root_dir; i++) {
@@ -271,7 +271,8 @@ void traverse(char *argument)
     //get info back from client
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
-    &de = message->data;
+    strncpy(&de,message->data,sizeof(de));
+    
     if (de.name[0] == SLOT_EMPTY) {
       /* this slot has not been used, means the end of the directory */
       break;
