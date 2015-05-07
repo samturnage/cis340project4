@@ -63,7 +63,7 @@ int fmount(char *hostname)
     {
     	die("could not find hostname");
     }
-    printf("/n %s /n",entry->h_addr_list[0]);
+    printf("\n %s \n",entry->h_name);
     
     printf("\nConnecting to host [%s]",entry->h_name);
     hostname = inet_ntoa( **((struct in_addr **)entry->h_addr_list[0])) ;
