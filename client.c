@@ -75,7 +75,7 @@ int fmount(char *hostname)
     address.sin_port = htons(PORT);
     
     //translate the string IP into an IP adress data type
-    if (inet_aton(hostname , &address.sin_addr) == 0)
+    if (inet_aton(hostIP , &address.sin_addr) == 0)
     {
         fprintf(stderr, "inet_aton() failed\n");
         printf("\nConnection failed");
