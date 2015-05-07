@@ -232,7 +232,7 @@ void traverse(char *argument)
   int flag = 0;
   if(argument != NULL && strcmp(argument, "-l")==0)flag = 1;//long output
   struct Packet *message = malloc(sizeof(struct Packet));
-  uint16_t num_root_dir;
+  short num_root_dir;
   int i;
   struct direntry de;
 
@@ -261,12 +261,13 @@ void traverse(char *argument)
   for (f=0; f < sizeof(uint16_t); f++)
         num_root_dir = (num_root_dir << 8) + ((unsigned char) message->data[f]);
         */
-  num_root_dir = message->data[0]|message->data[1]<<8;
+  num_root_dir = (((short)message->data[0]) << 8) | message->data[1];
+  //num_root_dir = message->data[0]|message->data[1]<<8;
   //num_root_dir = (uint16_t)(
   //         (message->data[0]) << 8 | 
   //         (message->data[1])
   //);
-  printf("\nroots:%h\n",num_root_dir);
+  printf("\nroots:%u\n",num_root_dir);
   
   // now start to read the directory entries 
   /*
