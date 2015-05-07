@@ -284,18 +284,18 @@ void traverse(char *argument)
     strncpy(de.resv,message->data[12],sizeof(de.resv));
 	*/
     
-    if (de.name[0] == SLOT_EMPTY) {
+    if (de->name[0] == SLOT_EMPTY) {
       // this slot has not been used, means the end of the directory 
       break;
     }
-    if ((uint8_t)de.name[0] == SLOT_DELETED) {
+    if ((uint8_t)de->name[0] == SLOT_DELETED) {
       // this is a deleted slot
       continue;
     }
-    if ((de.attribute & ATTR_VOLUME) != 0) {
+    if ((de->attribute & ATTR_VOLUME) != 0) {
       continue;
     } else { // otherwise print the entry 
-      displayEntry(&de, flag);
+      displayEntry(de, flag);
     }
   }
   
