@@ -274,7 +274,7 @@ void traverse(char *argument)
     {die("\nrecvfrom() failed");}
     
     
-    &de = (struct direntry *)message->data;
+    de = (struct direntry )message->data;
     //de.name = message[10]
     //de.
     /*
