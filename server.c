@@ -103,7 +103,7 @@ int main()
 		  read(floppy_fd, &num_fat, 1);
 		  //read the number of root directories to be returned
 		  //we are using argument instead of data becuse it is already a short which we need
-		  read(floppy_fd, message->argument, 2);
+		  read(floppy_fd, message->data, 2);
 		  lseek(floppy_fd, 22, SEEK_SET);
 		  read(floppy_fd, &size_fat, 2);
 		  /* seek to the beginning of root directory */
@@ -115,8 +115,9 @@ int main()
 	    }
 	    else if(message->argument>0)//return data for directories
 	    {
-	    	
-	    	
+	    	read(floppy_fd, message->data, (int)message->argument);
+	    	if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
+	        {    	die("\nsendto()");}
 	    }
 	}
         
