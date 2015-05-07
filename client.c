@@ -234,7 +234,7 @@ void traverse(char *argument)
   struct Packet *message = malloc(sizeof(struct Packet));
   short num_root_dir;
   int i;
-  struct direntry de;
+  struct direntry *de;
 
   if (flag) { /* detailed format */
     /* print the table header */
@@ -274,7 +274,7 @@ void traverse(char *argument)
     {die("\nrecvfrom() failed");}
     
     
-    de = (struct direntry )message->data;
+    de = (struct direntry *)message->data;
     //de.name = message[10]
     //de.
     /*
