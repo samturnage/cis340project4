@@ -256,21 +256,13 @@ void traverse(char *argument)
   //get info back from client
   if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
   {die("\nrecvfrom() failed");}
-  int f;
-  /*
-  for (f=0; f < sizeof(uint16_t); f++)
-        num_root_dir = (num_root_dir << 8) + ((unsigned char) message->data[f]);
-        */
+
   num_root_dir = (((short)message->data[1]) << 8) | message->data[0];
-  //num_root_dir = message->data[0]|message->data[1]<<8;
-  //num_root_dir = (uint16_t)(
-  //         (message->data[0]) << 8 | 
-  //         (message->data[1])
-  //);
+
   printf("\nroots:%u\n",num_root_dir);
   
   // now start to read the directory entries 
-  /*
+  
   for (i = 0; i < num_root_dir; i++) {
     memset(&de, 0, sizeof(de));
     memset(message->data, 0, sizeof(message->data));
@@ -281,14 +273,17 @@ void traverse(char *argument)
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
     
+    message->data
     
-    
+    &de = (struct direntry *)message->data;
+    //de.name = message[10]
+    //de.
+    /*
     strncpy(de.name,message->data[0],sizeof(de.name));
     strncpy(de.ext,message->data[8],sizeof(de.ext));
     de.attribute = message->data[11];
     strncpy(de.resv,message->data[12],sizeof(de.resv));
-    
-    
+	*/
     
     if (de.name[0] == SLOT_EMPTY) {
       // this slot has not been used, means the end of the directory 
@@ -304,7 +299,7 @@ void traverse(char *argument)
       displayEntry(&de, flag);
     }
   }
-  */
+  
 }
 
 /////////////////////////////////////////////////////////////
