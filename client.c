@@ -230,7 +230,7 @@ static void displayEntry(struct direntry *de, int flag) {
 void traverse(char *argument)
 {
   int flag = 0;
-  if(strcmp(argument, "-l")==0)flag = 1;//long output
+  if(argument != NULL && strcmp(argument, "-l")==0)flag = 1;//long output
   struct Packet *message = malloc(sizeof(struct Packet));
   uint16_t num_root_dir;
   int i;
@@ -260,6 +260,7 @@ void traverse(char *argument)
   temp[0] = message->data[0];
   temp[1] = message->data[1];
   num_root_dir = atoi(temp);
+  printf("\nroots:%u\n",num_root_dir);
   
   // now start to read the directory entries 
   /*
@@ -345,8 +346,6 @@ int main(void)
     
     printf("\nClient-Server floppy reader");
     printf("\n===========================");
-
-    
     printf("\nNOTE: when using fmount, enter any hostname, this needs to be fixed later");
     printf("\nEnter a command:");
     while(1)
