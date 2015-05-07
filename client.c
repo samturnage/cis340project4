@@ -264,6 +264,7 @@ void traverse(char *argument)
   // now start to read the directory entries 
   
   for (i = 0; i < num_root_dir; i++) {
+    printf("loop");
     memset(&de, 0, sizeof(de));
     //memset(message->data, 0, sizeof(message->data));
     message->argument = sizeof(de);
@@ -275,6 +276,7 @@ void traverse(char *argument)
     
     
     de = (struct direntry *)message->data;
+    
     //de.name = message[10]
     //de.
     /*
