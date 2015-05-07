@@ -271,7 +271,15 @@ void traverse(char *argument)
     //get info back from client
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
-    strncpy(de,message->data,sizeof(de));
+    
+    
+    
+    strncpy(de.name,message->data[0],sizeof(de.name));
+    strncpy(de.ext,message->data[8],sizeof(de.ext));
+    de.attribute = message->data[11];
+    strncpy(de.resv,message->data[12],sizeof(de.resv));
+    
+    
     
     if (de.name[0] == SLOT_EMPTY) {
       /* this slot has not been used, means the end of the directory */
