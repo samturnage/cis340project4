@@ -63,7 +63,7 @@ int fmount(char *hostname)
     {
     	die("could not find hostname");
     }
-    printf("/n %s /n"entry->h_addr);
+    printf("/n %s /n",entry->h_addr);
     
     printf("\nConnecting to host [%s]",hostname);
     hostname = entry->h_addr;
