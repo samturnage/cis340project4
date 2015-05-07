@@ -256,10 +256,11 @@ void traverse(char *argument)
   //get info back from client
   if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
   {die("\nrecvfrom() failed");}
-  char temp[2];
-  temp[0] = message->data[0];
-  temp[1] = message->data[1];
-  num_root_dir = atoi(temp);
+  
+  num_root_dir = (uint16_t)(
+           (message->data[0]) << 8 | 
+           (message->data[1])
+          );
   printf("\nroots:%u\n",num_root_dir);
   
   // now start to read the directory entries 
