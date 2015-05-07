@@ -335,7 +335,7 @@ int main(void)
 
     
     printf("\nNOTE: when using fmount, enter any hostname, this needs to be fixed later");
-    printf("\nsize:%d",sizeof(direntry));
+    printf("\nsize:%d",sizeof(struct direntry));
     printf("\nEnter a command:");
     while(1)
     {
