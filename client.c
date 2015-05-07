@@ -58,15 +58,15 @@ void die(char *s)
 int fmount(char *hostname)
 {
     struct hostent *entry;
-    entry = gethostbyname2(hostname,AF_INET);
+    entry = gethostbyname(hostname);
     if(!entry)
     {
     	die("could not find hostname");
     }
-    printf("/n %s /n",entry->h_addr);
+    printf("/n %s /n",entry->h_addr_list[0]);
     
-    printf("\nConnecting to host [%s]",hostname);
-    hostname = entry->h_addr;
+    printf("\nConnecting to host [%s]",entry->h_name);
+    hostname = inet_ntoa( (struct in_addr)entry->h_addr_list[0] ) ;
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
