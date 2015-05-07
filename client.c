@@ -271,7 +271,7 @@ void traverse(char *argument)
     //get info back from client
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
-    strncpy(&de,message->data,sizeof(de));
+    strncpy(de,message->data,sizeof(de));
     
     if (de.name[0] == SLOT_EMPTY) {
       /* this slot has not been used, means the end of the directory */
@@ -338,7 +338,6 @@ int main(void)
 
     
     printf("\nNOTE: when using fmount, enter any hostname, this needs to be fixed later");
-    printf("\nsize:%d",sizeof(struct direntry));
     printf("\nEnter a command:");
     while(1)
     {
