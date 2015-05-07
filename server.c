@@ -98,17 +98,18 @@ int main()
 	    {
 	    	  char num_fat;
   		  uint16_t size_fat;
+  		  uint16_t rootdirs;
   		  
 	    	  lseek(floppy_fd, 16, SEEK_SET);
 		  read(floppy_fd, &num_fat, 1);
-		  read(floppy_fd, message->data, 2);
+		  read(floppy_fd, &rootdirs, 2);
 		  lseek(floppy_fd, 22, SEEK_SET);
 		  read(floppy_fd, &size_fat, 2);
 		  /* seek to the beginning of root directory */
 		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512, SEEK_SET);
 		  printf("\nnumfat:%x",num_fat);
 		  printf("\nsizefat:%u",size_fat);
-		  printf("\nroot:%c,%c",message->data[0],message->data[1]);
+		  printf("\nroot:%u",rootdirs);
 		  if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
 	          {
 	            	die("\nsendto()");
