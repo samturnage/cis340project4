@@ -57,17 +57,16 @@ void die(char *s)
 int fmount(char *hostname)
 {
     //////////
-    hostname = SERVER;
+    //hostname = SERVER;
     /////////
-    /*
+    
     struct hostent *entry;
     entry = gethostbyname(hostname);
     if(!entry)
     {
     	die("could not find hostname");
     }
-    printf("\nIP address: %s",inet_ntoa((struct inaddr **)entry->h_addr_list));
-    */
+    hostname = inet_ntoa((struct inaddr **)entry->h_addr_list);
     
     printf("\nConnecting to host [%s]",hostname);
     
