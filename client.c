@@ -275,7 +275,7 @@ void traverse(char *argument)
     memset(&de, 0, sizeof(struct direntry));
     //memset(message->data, 0, sizeof(message->data));
     message->argument = sizeof(struct direntry);
-    printf("//size of de:%d",sizeof(direntry));
+    printf("//size of de:%d",sizeof(struct direntry));
     printf("//size of argument:%u",message->argument);
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {die("Error sending to server");}
