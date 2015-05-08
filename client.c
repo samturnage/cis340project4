@@ -57,7 +57,7 @@ void die(char *s)
 
 int fmount(char *hostname)
 {
-    struct hostent *entry;
+    char *entry;
     entry = getnameinfo(&address, sizeof(address), hostname, sizeof(hostname), SERVER, sizeof(SERVER),0);
     if(!entry)
     {
