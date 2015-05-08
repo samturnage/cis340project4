@@ -70,11 +70,12 @@ int main()
             die("\nrecvfrom() failed");
         }
         //print details of the client/peer and the data received
+        printf("\n-----------------------");
         printf("\nHandling client %s", inet_ntoa(si_other.sin_addr));
         printf("\nIncoming Length: %u", slen);
         printf("\nCommand: %s" , message->command);
         printf("\nArgument: %u" , message->argument);
-        printf("\nData: %s" , message->data);
+        if(message->data!=NULL)printf("\nData: %s" , message->data);
         //now reply the client with the same data
         if(strcmp(message->command, "connect")==0){
             if(hasclient == 0)
@@ -157,6 +158,7 @@ int main()
 	{
 		printf("\n Request failed. Bad non-conected server or bad command");
 	}
+	printf("\n-----------------------");
 
     }
     close(floppy_fd);
