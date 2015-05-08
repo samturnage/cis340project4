@@ -76,6 +76,7 @@ int main()
         printf("\nCommand: %s" , message->command);
         printf("\nArgument: %u" , message->argument);
         if(message->data!=NULL)printf("\nData: %s" , message->data);
+        printf("\n");
         //now reply the client with the same data
         if(strcmp(message->command, "connect")==0){
             if(hasclient == 0)
