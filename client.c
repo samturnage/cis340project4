@@ -176,7 +176,7 @@ static void displayEntry(struct direntry *de, int flag) {
   }
   for (i = 0; i < 3; i++) {
     if (de->ext[i] != ' ') {
-      if (i == 0) {
+      if (i == 0 && (de->ext[i] != NULL && de->ext[i] != " ")) {
         fullName[k++] = '.';
       }
       fullName[k++] = de->ext[i];
