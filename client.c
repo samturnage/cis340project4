@@ -362,13 +362,20 @@ int main(void)
         }
         else if (strcmp(arguments[0], "fmount")==0)
         {
-            if(arguments[1] == NULL)
+            if(connected == 0)
             {
-                printf("\nEnter hostname!\n");
+	            if(arguments[1] == NULL)
+	            {
+	                printf("\nEnter hostname!\n");
+	            }
+	            else 
+	            {
+	                connected = fmount(arguments[1]);
+	            }
             }
-            else 
+            else
             {
-                connected = fmount(arguments[1]);
+            	    printf("\nYou must first disconnect using fumount!\n");
             }
         }
         else if(strcmp(arguments[0], "fumount")==0)
