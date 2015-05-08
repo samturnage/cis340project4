@@ -283,8 +283,14 @@ void traverse(char *argument)
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
     
+    char entry[sizeof(struct direntry)];
+    int z;
+    for(z=0;z<sizeof(struct direntry);z++)
+    {
+    	entry[z] = message->data[z];
+    }
     
-    de = (struct direntry *)message->data;
+    de = (struct direntry *)entry;
     
     //de.name = message[10]
     //de.
@@ -373,6 +379,8 @@ int main(void)
 		m++;
 		arguments[m] = strtok(NULL, "\n ");
 	}
+	if(arguments[0] == NULL)
+		continue;
         
         if(strcmp(arguments[0], "quit")==0)
         {
