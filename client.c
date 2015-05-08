@@ -271,34 +271,14 @@ num_root_dir = (((short)message->data[1] << 3)-12);
   // now start to read the directory entries 
   
   for (i = 0; i < num_root_dir; i++) {
-    printf("loop");
     memset(&de, 0, sizeof(de));
-    //memset(message->data, 0, sizeof(message->data));
     message->argument = sizeof(struct direntry);
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {die("Error sending to server");}
     //get info back from client
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
-    /*
-    char entry[sizeof(struct direntry)];
-    int z;
-    for(z=0;z<sizeof(struct direntry);z++)
-    {
-    	entry[z] = message->data[z];
-    }
-    */
     de = (struct direntry *)message->data;
-    
-    //de.name = message[10]
-    //de.
-    /*
-    strncpy(de.name,message->data[0],sizeof(de.name));
-    strncpy(de.ext,message->data[8],sizeof(de.ext));
-    de.attribute = message->data[11];
-    strncpy(de.resv,message->data[12],sizeof(de.resv));
-	*/
-    
     if (de->name[0] == SLOT_EMPTY) {
       // this slot has not been used, means the end of the directory 
       break;
