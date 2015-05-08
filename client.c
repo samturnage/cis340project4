@@ -240,7 +240,7 @@ void traverse(char *argument)
   if(argument != NULL && strcmp(argument, "-l")==0)flag = 1;//long output
   struct Packet *message = malloc(sizeof(struct Packet));
   short num_root_dir;
-  int i;
+  short i;
   struct direntry *de = (struct direntry *)malloc(sizeof(struct direntry));
 
   if (flag) { /* detailed format */
