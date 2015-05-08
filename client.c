@@ -58,8 +58,7 @@ void die(char *s)
 int fmount(char *hostname)
 {
     char *entry;
-    char *server;
-    socklen_t empty = 0;
+    char *server = "255.255.255.255";
     entry = getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), server, sizeof(server), 0);
     if(!entry)
     {
