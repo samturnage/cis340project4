@@ -86,7 +86,7 @@ int fmount(char *hostname)
     printf("\nConnecting to host [%s]",entry->h_name);
     char *hostIP = entry->h_addr;
    */
-    char *hostIP;
+    char *hostIP = "255.255.255.255";
     struct hostent *he;
     struct in_addr **addr_list;
     int i;
