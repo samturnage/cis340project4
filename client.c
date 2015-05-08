@@ -58,10 +58,10 @@ void die(char *s)
 int fmount(char *hostname)
 {
     char *entry;
-    //char *server;
     entry = getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), NULL, 0, 0);
     if(!entry)
     {
+    	//tells program connection wasn't successful
     	printf("\nCould not find hostname\n");
     	return 0;
     }
@@ -74,6 +74,8 @@ int fmount(char *hostname)
     memset(&address, 0, sizeof(address));
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
+    printf("/nConnection Successful!");
+    //tells the rest of the program connection was successful
     return 1;
 }
 
