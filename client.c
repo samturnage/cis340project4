@@ -10,7 +10,7 @@
 #include<sys/socket.h>
 #include<netdb.h>
 
-#define SERVER "127.0.0.1"  
+//#define SERVER "127.0.0.1"  
 #define BUFLEN 512  //Max length of buffer
 #define PORT 5000   //The port on which to send data
 
@@ -58,10 +58,12 @@ void die(char *s)
 int fmount(char *hostname)
 {
     char *entry;
-    entry = getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), SERVER, sizeof(SERVER),0);
+    //char *server;
+    entry = getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), NULL, 0, 0);
     if(!entry)
     {
-        die("could not find hostname");
+    	printf("\nCould not find hostname\n");
+    	return 0;
     }
     printf("\nConnecting to host [%s]",hostname);
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -72,7 +74,7 @@ int fmount(char *hostname)
     memset(&address, 0, sizeof(address));
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
-    
+    return 1;
 }
 
 //detach from the server
