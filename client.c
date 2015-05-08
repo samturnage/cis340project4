@@ -57,35 +57,6 @@ void die(char *s)
 
 int fmount(char *hostname)
 {
-	/*
-    struct hostent *he;
-    struct in_addr **addr_list;
-    int i;
-         
-    if ( (he = gethostbyname( hostname ) ) == NULL) 
-    {
-        herror("gethostbyname");
-        return 1;
-    }
-    addr_list = (struct in_addr **) he->h_addr_list;
-    for(i = 0; addr_list[i] != NULL; i++) 
-    {
-        //Return the first one;
-        strcpy(ip , inet_ntoa(*addr_list[i]) );
-        break;
-    }
-    */
-//////////////////////////////////////////////////////////////////	
-    /*
-    struct hostent *entry;
-    entry = gethostbyname(hostname);
-    if(!entry)
-    {
-    	die("could not find hostname");
-    }
-    printf("\nConnecting to host [%s]",entry->h_name);
-    char *hostIP = entry->h_addr;
-   */
     char hostIP[100];
     struct hostent *he;
     struct in_addr **addr_list;
@@ -123,33 +94,7 @@ int fmount(char *hostname)
     addrlen = sizeof(address);
     printf("\nConnection successful");
     return 1;
-	
-	
-	
-	
-	
-	
-	//////////////////////////////////////////////////////////////////
-	/*
-    if(getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), NULL, 0, NI_NAMEREQD) != 0)
-    {
-    	//tells program connection wasn't successful
-    	printf("\nCould not find hostname\n");
-    	return 0;
-    }
-    printf("\nConnecting to host [%s]",hostname);
-    if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-    {
-        die("socket");
-    }
-    
-    memset(&address, 0, sizeof(address));
-    address.sin_family = AF_INET;
-    address.sin_port = htons(PORT);
-    printf("\nConnection Successful!");
-    //tells the rest of the program connection was successful
-    return 1;
-    */
+
 }
 
 //detach from the server
