@@ -274,9 +274,7 @@ num_root_dir = (((short)message->data[1] << 3)-12);
     printf("loop");
     memset(&de, 0, sizeof(de));
     //memset(message->data, 0, sizeof(message->data));
-    message->argument = 32;
-    printf("//size of de:%d",sizeof(de));
-    printf("//size of argument:%u",message->argument);
+    message->argument = sizeof(struct direntry);
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {die("Error sending to server");}
     //get info back from client
