@@ -58,7 +58,7 @@ void die(char *s)
 int fmount(char *hostname)
 {
 
-    if(getnameinfo((struct sockaddr *)&address, addrlen, hostname, sizeof(hostname), NULL, 0, NI_NAMEREQD))
+    if(!getnameinfo((struct sockaddr *)&address, addrlen, hostname, sizeof(hostname), NULL, 0, NI_NAMEREQD))
     {
     	//tells program connection wasn't successful
     	printf("\nCould not find hostname\n");
