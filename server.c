@@ -32,6 +32,8 @@ void die(char *s)
 int main()
 {
     struct sockaddr_in si_me, si_other;
+    char currentclient[100];
+    short hasclient = 0;
     int socket_fd, floppy_fd;
     unsigned int slen;
     struct Packet *message = malloc(sizeof(struct Packet));
@@ -55,6 +57,7 @@ int main()
         perror("no such file");
     }
     
+    
     //keep listening for data
     while(1)
     {
@@ -73,8 +76,39 @@ int main()
         printf("\nArgument: %u" , message->argument);
         printf("\nData: %s" , message->data);
         //now reply the client with the same data
-         
-        if(strcmp(message->command, "structure")==0){
+        if(strcmp(message->command, "connect")==0){
+            if(hasclient == 0)
+            {
+            	    strcpy(currentclient,inet_ntoa(si_other.sin_addr));
+            	    printf("\nConnection made to client %s",currentclient);
+            	    hasclient = 1;
+            	    strcpy(message->command,"success");
+            	    if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
+	            {die("\nsendto()");}
+            }
+            else
+            {
+            	    printf("Connection failed, already connected to: %s",currentclient);
+            	    strcpy(message->command,"failed");
+            	    if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
+	            {
+	            	die("\nsendto()");
+	            }
+            }
+        } 
+        else if(strcmp(message->command, "disconnect")==0 && hasclient==1){
+            if(strcmp(inet_ntoa(si_other.sin_addr), currentclient)==0)	
+            {
+            	printf("Disconnected from client: %s",currentclient);
+            	memset(currentclient,0,strlen(currentclient));
+            	hasclient = 0;
+            }
+            else
+            {
+            	printf("\nNon-connected client trying to disconnect");
+            }
+        } 
+        else if(strcmp(message->command, "structure")==0 && hasclient==1 && strcmp(inet_ntoa(si_other.sin_addr), currentclient)==0){
             lseek(floppy_fd, 0, SEEK_SET );
             read(floppy_fd, message->data, sizeof(message->data));
             //printf("\nData: %*s",512 , flop);
@@ -83,7 +117,7 @@ int main()
             	die("\nsendto()");
             }
         }
-        else if(strcmp(message->command, "showsector")==0){
+        else if(strcmp(message->command, "showsector")==0 && hasclient==1 && strcmp(inet_ntoa(si_other.sin_addr), currentclient)==0){
             lseek(floppy_fd, message->argument*512, SEEK_SET );
             read(floppy_fd, message->data, sizeof(message->data));
             //printf("\nData: %*s",512 , flop);
@@ -92,14 +126,13 @@ int main()
             	die("\nsendto()");
             }
         }
-	else if(strcmp(message->command, "traverse")==0){
+	else if(strcmp(message->command, "traverse")==0 && hasclient==1 && strcmp(inet_ntoa(si_other.sin_addr), currentclient)==0){
 	    
 	    if(message->argument==0)//init, get ready for reading traverse data
 	    {
-	    	  int n = 1;
 	    	  char num_fat;
   		  uint16_t size_fat;
-  	
+  		  uint16_t rootdirs;
   		  
 	    	  lseek(floppy_fd, 16, SEEK_SET);
 		  read(floppy_fd, &num_fat, 1);
@@ -107,8 +140,7 @@ int main()
 		  lseek(floppy_fd, 22, SEEK_SET);
 		  read(floppy_fd, &size_fat, 2);
 		  /* seek to the beginning of root directory */
-		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512 + n * 32, SEEK_SET);
-		  read(floppy_fd, message->data, sizeof(message->data));
+		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512, SEEK_SET);
 		  if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
 	          {
 	            	die("\nsendto()");
@@ -122,9 +154,11 @@ int main()
 	        {    	die("\nsendto()");}
 	    }
 	}
-        
-        
-        
+	else
+	{
+		printf("\n Request failed. Bad non-conected server or bad command");
+	}
+
     }
     close(floppy_fd);
     close(socket_fd);
