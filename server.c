@@ -72,10 +72,11 @@ int main()
         //print details of the client/peer and the data received
         printf("\n-----------------------");
         printf("\nHandling client %s", inet_ntoa(si_other.sin_addr));
-        printf("\nIncoming Length: %u", slen);
+        
+        //printf("\nIncoming Length: %u", slen);
         printf("\nCommand: %s" , message->command);
-        printf("\nArgument: %u" , message->argument);
-        if(message->data!=NULL)printf("\nData: %s" , message->data);
+        //printf("\nArgument: %u" , message->argument);
+        //if(message->data!=NULL)printf("\nData: %s" , message->data);
         printf("\n");
         //now reply the client with the same data
         if(strcmp(message->command, "connect")==0){
