@@ -282,15 +282,15 @@ void traverse(char *argument)
     //get info back from client
     if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
     {die("\nrecvfrom() failed");}
-    
+    /*
     char entry[sizeof(struct direntry)];
     int z;
     for(z=0;z<sizeof(struct direntry);z++)
     {
     	entry[z] = message->data[z];
     }
-    
-    de = (struct direntry *)entry;
+    */
+    de = (struct direntry *)message->data;
     
     //de.name = message[10]
     //de.
