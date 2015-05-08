@@ -82,6 +82,7 @@ int fmount(char *hostname)
 void fumount() //int fd   
 {
     close(socket_fd);
+    memset(&address, 0, sizeof(address));
     printf("\nDisconnected from host");
 }
 
