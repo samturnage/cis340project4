@@ -73,7 +73,7 @@ int fmount(char *hostname)
     memset(&address, 0, sizeof(address));
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
-    printf("/nConnection Successful!");
+    printf("\nConnection Successful!");
     //tells the rest of the program connection was successful
     return 1;
 }
