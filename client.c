@@ -47,7 +47,7 @@ struct Packet
 //addresses for network communication
 struct sockaddr_in address;    
 int socket_fd;
-//unsigned int addrlen;
+unsigned int addrlen;
 
 void die(char *s)
 {
@@ -59,7 +59,7 @@ int fmount(char *hostname)
 {
     char *entry;
     char *server = "255.255.255.255";
-    socklen_t addrlen = sizeof(address);
+    socklen_t addrlen = sizeof((struct sockaddr *)address);
     entry = getnameinfo((struct sockaddr *)&address, addrlen, hostname, sizeof(hostname), server, sizeof(server), 0);
     if(!entry)
     {
