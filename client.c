@@ -316,7 +316,7 @@ void showsector(short sectorNum)
     unsigned int col=0x00;
     
     
-    printf("\nSector : %u\n",sectorNum);
+    printf("\nSector : %u\n        ",sectorNum);
     for(z=0; z<16; z++){   //format column
         printf("%4x", col);
         col=col+0x01;}
