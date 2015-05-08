@@ -58,7 +58,8 @@ void die(char *s)
 int fmount(char *hostname)
 {
     char *entry;
-    entry = getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), NULL, NULL, 0);
+    socklen_t empty = 0;
+    entry = getnameinfo((struct sockaddr *)&address, sizeof(address), hostname, sizeof(hostname), NULL, empty, 0);
     if(!entry)
     {
     	//tells program connection wasn't successful
