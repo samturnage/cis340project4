@@ -241,7 +241,7 @@ void traverse(char *argument)
   struct Packet *message = malloc(sizeof(struct Packet));
   short num_root_dir;
   int i;
-  struct direntry *de;
+  struct direntry *de = (struct direntry *)malloc(sizeof(struct direntry));
 
   if (flag) { /* detailed format */
     /* print the table header */
@@ -272,10 +272,10 @@ void traverse(char *argument)
   
   for (i = 0; i < num_root_dir; i++) {
     printf("loop");
-    memset(&de, 0, sizeof(de));
+    memset(&de, 0, sizeof(struct direntry));
     //memset(message->data, 0, sizeof(message->data));
-    message->argument = sizeof(de);
-    printf("//size of de:%d",sizeof(de));
+    message->argument = sizeof(struct direntry);
+    printf("//size of de:%d",sizeof(direntry));
     printf("//size of argument:%u",message->argument);
     if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
     {die("Error sending to server");}
