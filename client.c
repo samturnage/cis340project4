@@ -92,7 +92,8 @@ int fmount(char *hostname)
     	return 0;
     }
     addrlen = sizeof(address);
-    printf("\nConnection successful");
+    printf("Connection successful");
+    printf("\nFloppy ready to be used");
     return 1;
 
 }
@@ -176,7 +177,7 @@ static void displayEntry(struct direntry *de, int flag) {
   }
   for (i = 0; i < 3; i++) {
     if (de->ext[i] != ' ') {
-      if (i == 0 && (de->ext[i] != NULL && de->ext[i] != " ")) {
+      if (i == 0 && (int(de->ext[i]) != 0 && de->ext[i] != " ")) {
         fullName[k++] = '.';
       }
       fullName[k++] = de->ext[i];
