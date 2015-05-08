@@ -58,13 +58,12 @@ void die(char *s)
 int fmount(char *hostname)
 {
     struct hostent *entry;
-    entry = gethostbyname(hostname);
+    entry = getnameinfo(&address, sizeof(address), hostname, sizeof(hostname), SERVER, sizeof(SERVER),0);
     if(!entry)
     {
-    	die("could not find hostname");
+        die("could not find hostname");
     }
-    printf("\nConnecting to host [%s]",entry->h_name);
-    char *hostIP = entry->h_addr;
+    printf("\nConnecting to host [%s]",hostname);
     if ( (socket_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
         die("socket");
@@ -74,17 +73,8 @@ int fmount(char *hostname)
     address.sin_family = AF_INET;
     address.sin_port = htons(PORT);
     
-    //translate the string IP into an IP adress data type
-    if (inet_aton(hostIP , &address.sin_addr) == 0)
-    {
-        fprintf(stderr, "inet_aton() failed\n");
-        printf("\nConnection failed");
-    	return 0;
-    }
-    addrlen = sizeof(address);
-    printf("\nConnection successful");
-    return 1;
 }
+
 //detach from the server
 void fumount() //int fd   
 {
