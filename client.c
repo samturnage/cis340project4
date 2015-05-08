@@ -92,6 +92,20 @@ int fmount(char *hostname)
     	return 0;
     }
     addrlen = sizeof(address);
+    
+    struct Packet *message = malloc(sizeof(struct Packet));
+    strcat(message->command, "connect");
+    if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
+    {die("Error sending to server");}
+    if ((recvfrom(socket_fd, (struct Packet*)message, sizeof(*message), 0,(struct sockaddr *) &address,&addrlen )) < 0)
+    { die("\nrecvfrom() failed");}
+    
+    if(strcmp(message->command, "failed")==0)
+    {
+    	printf("Connection failed. Server already has a client.");
+    	return 0;
+    }
+
     printf("Connection successful");
     printf("\nFloppy ready to be used");
     return 1;
@@ -101,6 +115,11 @@ int fmount(char *hostname)
 //detach from the server
 void fumount() //int fd   
 {
+    struct Packet *message = malloc(sizeof(struct Packet));
+    strcat(message->command, "disconnect");
+    if (sendto(socket_fd, (struct Packet*)message, sizeof(*message) , 0 , (struct sockaddr *)&address, sizeof(address))==-1)
+    {die("Error sending to server");}
+    
     close(socket_fd);
     memset(&address, 0, sizeof(address));
     printf("\nDisconnected from host");
