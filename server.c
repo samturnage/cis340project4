@@ -132,7 +132,6 @@ int main()
 	    {
 	    	  char num_fat;
   		  uint16_t size_fat;
-  		  uint16_t rootdirs;
   		  
 	    	  lseek(floppy_fd, 16, SEEK_SET);
 		  read(floppy_fd, &num_fat, 1);
