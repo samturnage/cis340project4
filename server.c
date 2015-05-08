@@ -96,9 +96,10 @@ int main()
 	    
 	    if(message->argument==0)//init, get ready for reading traverse data
 	    {
+	    	  int n = 1;
 	    	  char num_fat;
   		  uint16_t size_fat;
-  		  uint16_t rootdirs;
+  	
   		  
 	    	  lseek(floppy_fd, 16, SEEK_SET);
 		  read(floppy_fd, &num_fat, 1);
@@ -106,7 +107,8 @@ int main()
 		  lseek(floppy_fd, 22, SEEK_SET);
 		  read(floppy_fd, &size_fat, 2);
 		  /* seek to the beginning of root directory */
-		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512, SEEK_SET);
+		  lseek(floppy_fd, (1 + num_fat * size_fat) * 512 + n * 32, SEEK_SET);
+		  read(floppy_fd, message->data, sizeof(message->data));
 		  if (sendto(socket_fd, message, sizeof(*message), 0, (struct sockaddr*) &si_other, slen) == -1)
 	          {
 	            	die("\nsendto()");
